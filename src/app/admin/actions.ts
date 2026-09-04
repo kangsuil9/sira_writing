@@ -32,3 +32,12 @@ export async function createClub(_: AdminActionState, formData: FormData): Promi
   if (error) return { error: "클럽을 개설하지 못했어요." };
   revalidatePath("/admin/clubs"); return { success: "클럽을 개설했어요." };
 }
+export async function updateClubStatus(_: AdminActionState, formData: FormData): Promise<AdminActionState> {
+  const auth = await requireAdmin(); if ("error" in auth) return { error: auth.error };
+  const clubId = String(formData.get("clubId") ?? ""), status = String(formData.get("status") ?? "");
+  if (!["DRAFT", "ACTIVE", "COMPLETED"].includes(status)) return { error: "변경할 상태를 확인해 주세요." };
+  const { error } = await auth.supabase.from("clubs").update({ status, updated_at: new Date().toISOString() }).eq("id", clubId);
+  if (error) return { error: "클럽 상태를 변경하지 못했어요." };
+  revalidatePath("/"); revalidatePath("/admin/clubs"); revalidatePath(`/clubs/${clubId}`);
+  return { success: "상태를 변경했어요." };
+}

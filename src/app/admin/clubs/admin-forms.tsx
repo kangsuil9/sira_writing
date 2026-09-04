@@ -1,6 +1,6 @@
 "use client";
 import { useActionState } from "react";
-import { createClub, createCycle, type AdminActionState } from "../actions";
+import { createClub, createCycle, updateClubStatus, type AdminActionState } from "../actions";
 const initialState: AdminActionState = {};
 export function CycleForm({ nextSequence }: { nextSequence: number }) {
   const [state, action, pending] = useActionState(createCycle, initialState);
@@ -14,4 +14,8 @@ function Feedback({ state }: { state: AdminActionState }) {
   if (state.error) return <p className="error">{state.error}</p>;
   if (state.success) return <p className="success">{state.success}</p>;
   return null;
+}
+export function ClubStatusForm({ clubId, status }: { clubId: string; status: string }) {
+  const [state, action, pending] = useActionState(updateClubStatus, initialState);
+  return <form className="status-form" action={action}><input type="hidden" name="clubId" value={clubId} /><select name="status" defaultValue={status}><option value="DRAFT">초안</option><option value="ACTIVE">활동 중</option><option value="COMPLETED">종료</option></select><button disabled={pending}>{pending ? "변경 중…" : "변경"}</button>{state.error && <span className="error">{state.error}</span>}{state.success && <span className="success">{state.success}</span>}</form>;
 }

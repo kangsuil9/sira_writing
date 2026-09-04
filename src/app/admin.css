@@ -23,3 +23,6 @@
 .status { padding: 4px 8px; background: #ece8df; }
 .status.active { background: #dfe9dc; color: #365338; }
 @media (max-width: 720px) { .admin-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } .admin-head h1 { font-size: 38px; } }
+.status-form { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+.status-form select { padding: 8px; border: 1px solid var(--line); background: white; }
+.status-form button { padding: 8px 12px; border: 0; background: var(--ink); color: white; cursor: pointer; }
