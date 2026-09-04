@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import "./globals.css";
+export const metadata: Metadata = { title: "시라 | 글쓰기로 돌보는 삶", description: "내면, 외면, 마음의 건강을 글쓰기로 나누는 시라 커뮤니티" };
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="ko"><body>{children}</body></html>; }
