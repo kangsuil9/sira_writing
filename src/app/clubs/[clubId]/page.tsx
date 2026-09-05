@@ -9,7 +9,7 @@ export default async function ClubPage({ params }: { params: Promise<{ clubId: s
   const [{ data: profile }, { data: club }, { data: posts }] = await Promise.all([
     supabase.from("profiles").select("role").eq("id", user.id).single(),
     supabase.from("clubs").select("id,category,topic_sentence,description,status,cycles(sequence,starts_at,ends_at)").eq("id", clubId).single(),
-    supabase.from("posts").select("id,title,published_at,updated_at,author_id,profiles(nickname)").eq("club_id", clubId).order("published_at", { ascending: false }),
+    supabase.from("posts").select("id,title,published_at,updated_at,author_id,profiles:profiles!posts_author_id_fkey(nickname)").eq("club_id", clubId).order("published_at", { ascending: false }),
   ]);
   if (!club || (club.status === "DRAFT" && profile?.role !== "ADMIN")) notFound();
   const cycle = Array.isArray(club.cycles) ? club.cycles[0] : club.cycles;

@@ -9,9 +9,9 @@ export default async function PostPage({ params }: { params: Promise<{ postId: s
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect("/login");
   const [{ data: post }, { data: readRows }, { data: continuations }] = await Promise.all([
-    supabase.from("posts").select("id,title,body,discussion_question,author_id,published_at,updated_at,profiles(nickname),clubs(id,topic_sentence,status,cycles(sequence,starts_at,ends_at))").eq("id", postId).single(),
+    supabase.from("posts").select("id,title,body,discussion_question,author_id,published_at,updated_at,profiles:profiles!posts_author_id_fkey(nickname),clubs(id,topic_sentence,status,cycles(sequence,starts_at,ends_at))").eq("id", postId).single(),
     supabase.from("post_reads").select("user_id").eq("post_id", postId),
-    supabase.from("post_continuations").select("id,body,author_id,created_at,updated_at,profiles(nickname)").eq("post_id", postId).order("created_at", { ascending: true }),
+    supabase.from("post_continuations").select("id,body,author_id,created_at,updated_at,profiles:profiles!post_continuations_author_id_fkey(nickname)").eq("post_id", postId).order("created_at", { ascending: true }),
   ]);
   if (!post) notFound();
   const author = Array.isArray(post.profiles) ? post.profiles[0] : post.profiles;
