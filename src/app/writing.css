@@ -35,3 +35,24 @@
 .article-actions button { padding: 0; border: 0; background: none; color: #a1392c; cursor: pointer; }
 .article-body { margin-top: 55px; padding-top: 45px; border-top: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font-family: Georgia, "Nanum Myeongjo", serif; font-size: 19px; line-height: 2; }
 @media (max-width: 720px) { .home-club-grid { grid-template-columns: 1fr; } .club-hero { padding-top: 44px; } .article { padding-top: 46px; } }
+.optional-question { margin-top: 34px !important; padding-top: 28px; border-top: 1px solid var(--line); }
+.optional-question small { margin-left: 6px; color: #8a8c84; font-weight: 400; }
+.discussion-question { margin-top: 44px; padding: 24px; background: #eeeae0; }
+.discussion-question span { color: var(--green); font-size: 14px; font-weight: 700; }
+.discussion-question p { margin: 10px 0 0; font-size: 18px; line-height: 1.7; }
+.reading-action { display: flex; justify-content: center; padding: 42px 0; }
+.read-button { padding: 12px 20px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); cursor: pointer; }
+.read-button.marked { border-color: var(--green); background: #e4ebe1; color: #365338; }
+.read-button span { margin-left: 5px; }
+.continuations { margin-top: 18px; padding-top: 20px; border-top: 1px solid var(--line); }
+.continuation-form { padding: 24px 0 30px; }
+.continuation-form textarea, .continuation-edit textarea { width: 100%; padding: 14px; border: 1px solid var(--line); background: #fffdf8; font: inherit; line-height: 1.7; resize: vertical; }
+.continuation-form button, .continuation-edit button { margin-top: 8px; padding: 10px 15px; border: 0; background: var(--ink); color: white; cursor: pointer; }
+.continuation-list { display: grid; }
+.continuation { padding: 24px 2px; border-bottom: 1px solid var(--line); }
+.continuation-byline { display: flex; align-items: baseline; justify-content: space-between; }
+.continuation-byline span { color: #85877f; font-size: 13px; }
+.continuation > p { margin: 14px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.continuation-edit { margin-top: 14px; }
+.continuation-delete { display: flex; justify-content: flex-end; }
+.continuation-delete button { padding: 4px 0; border: 0; background: none; color: #a1392c; cursor: pointer; }
