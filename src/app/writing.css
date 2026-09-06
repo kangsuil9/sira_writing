@@ -64,3 +64,18 @@
 .continuation-edit-actions .secondary-action { border: 1px solid var(--line); background: transparent; color: var(--ink); }
 .continuation-compose { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line); }
 .continuation-compose h2 { margin: 0; font-size: 24px; }
+.my-hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
+.my-hero h1 { margin: 14px 0 22px; font-size: clamp(38px, 7vw, 64px); line-height: 1.15; letter-spacing: -.05em; }
+.my-summary { display: flex; align-items: center; gap: 14px; color: #696b63; }
+.my-summary span { padding: 5px 9px; border: 1px solid var(--line); font-size: 12px; font-weight: 700; }
+.my-writing { padding: 42px 0 100px; }
+.my-club-group { margin-bottom: 58px; }
+.my-club-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.my-club-head h2 { margin: 10px 0 0; font-size: 27px; line-height: 1.4; }
+.my-club-head > span { flex: none; color: #77796f; }
+.my-post-list { display: grid; }
+.my-post-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; padding: 25px 4px; border-bottom: 1px solid var(--line); }
+.my-post-card h3 { margin: 0; font-size: 21px; line-height: 1.45; }
+.my-post-card p { margin: 9px 0 0; color: #74766e; line-height: 1.6; }
+.my-post-card time { flex: none; color: #85877f; font-size: 14px; }
+@media (max-width: 720px) { .my-hero { padding-top: 48px; } .my-club-head { align-items: flex-start; } .my-post-card { display: grid; gap: 12px; } }

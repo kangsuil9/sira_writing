@@ -57,6 +57,7 @@ export default async function HomePage() {
       <header className="shell header">
         <div className="brand">시라</div>
         <div className="header-actions">
+          <Link href="/my">마이페이지</Link>
           {profile.role === "ADMIN" && (
             <Link href="/admin/clubs">클럽 관리</Link>
           )}
