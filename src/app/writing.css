@@ -1,4 +1,6 @@
-.home-clubs { padding-bottom: 90px; }
+.home-clubs { padding-bottom: 64px; }
+.home-clubs + .home-clubs { padding-top: 10px; padding-bottom: 100px; }
+.club-empty { margin-bottom: 0; }
 .section-title { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .section-title h2 { font-size: 28px; }
 .section-title span { color: #74766e; }
