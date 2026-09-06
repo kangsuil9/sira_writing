@@ -54,5 +54,11 @@
 .continuation-byline span { color: #85877f; font-size: 13px; }
 .continuation > p { margin: 14px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
 .continuation-edit { margin-top: 14px; }
-.continuation-delete { display: flex; justify-content: flex-end; }
-.continuation-delete button { padding: 4px 0; border: 0; background: none; color: #a1392c; cursor: pointer; }
+.continuation-actions { display: flex; justify-content: flex-end; align-items: center; gap: 14px; margin-top: 10px; }
+.continuation-actions form { margin: 0; }
+.continuation-actions button { padding: 4px 0; border: 0; background: none; color: #66685f; cursor: pointer; }
+.continuation-actions .delete-action { color: #a1392c; }
+.continuation-edit-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.continuation-edit-actions .secondary-action { border: 1px solid var(--line); background: transparent; color: var(--ink); }
+.continuation-compose { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line); }
+.continuation-compose h2 { margin: 0; font-size: 24px; }

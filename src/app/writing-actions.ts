@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-export type WritingState = { error?: string };
+export type WritingState = { error?: string; saved?: boolean };
 async function currentUser() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -79,7 +79,7 @@ export async function createContinuation(_: WritingState, formData: FormData): P
   const { error } = await supabase.from("post_continuations").insert({ post_id: postId, author_id: user.id, body });
   if (error) return { error: "이어쓰기를 저장하지 못했어요." };
   revalidatePath(`/posts/${postId}`);
-  return {};
+  return { saved: true };
 }
 export async function updateContinuation(_: WritingState, formData: FormData): Promise<WritingState> {
   const { supabase, user } = await currentUser();
@@ -89,7 +89,7 @@ export async function updateContinuation(_: WritingState, formData: FormData): P
   const { error } = await supabase.from("post_continuations").update({ body, updated_at: new Date().toISOString() }).eq("id", continuationId).eq("author_id", user.id);
   if (error) return { error: "이어쓰기를 수정하지 못했어요." };
   revalidatePath(`/posts/${postId}`);
-  return {};
+  return { saved: true };
 }
 export async function deleteContinuation(formData: FormData) {
   const { supabase, user } = await currentUser();

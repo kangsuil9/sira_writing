@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import {
-  ContinuationEditForm,
   ContinuationForm,
+  ContinuationItem,
 } from "@/app/components/continuation-form";
 import {
-  deleteContinuation,
   deletePost,
   toggleRead,
 } from "@/app/writing-actions";
@@ -110,7 +109,7 @@ export default async function PostPage({
 
         <section className="continuations">
           <div className="section-title">
-            <h2>이어쓰기</h2>
+            <h2>이어진 글</h2>
             <span>{continuations?.length ?? 0}개</span>
           </div>
 
@@ -119,47 +118,25 @@ export default async function PostPage({
               const itemAuthor = Array.isArray(item.profiles)
                 ? item.profiles[0]
                 : item.profiles;
-              const own = item.author_id === user.id;
-
               return (
-                <article className="continuation" key={item.id}>
-                  <div className="continuation-byline">
-                    <strong>
-                      {itemAuthor?.nickname ?? "알 수 없는 회원"}
-                    </strong>
-                    <span>{formatDate(item.created_at)}</span>
-                  </div>
-
-                  {own && open ? (
-                    <>
-                      <ContinuationEditForm
-                        postId={post.id}
-                        continuationId={item.id}
-                        body={item.body}
-                      />
-                      <form
-                        className="continuation-delete"
-                        action={deleteContinuation}
-                      >
-                        <input type="hidden" name="postId" value={post.id} />
-                        <input
-                          type="hidden"
-                          name="continuationId"
-                          value={item.id}
-                        />
-                        <button>삭제</button>
-                      </form>
-                    </>
-                  ) : (
-                    <p>{item.body}</p>
-                  )}
-                </article>
+                <ContinuationItem
+                  key={item.id}
+                  postId={post.id}
+                  continuationId={item.id}
+                  body={item.body}
+                  author={itemAuthor?.nickname ?? "알 수 없는 회원"}
+                  date={formatDate(item.created_at)}
+                  editable={item.author_id === user.id && open}
+                />
               );
             })}
           </div>
 
           {open ? (
-            <ContinuationForm postId={post.id} />
+            <div className="continuation-compose">
+              <h2>이어쓰기</h2>
+              <ContinuationForm postId={post.id} />
+            </div>
           ) : (
             <p className="closed-note">
               클럽 활동이 종료되어 이어쓰기도 함께 마감됐어요.
