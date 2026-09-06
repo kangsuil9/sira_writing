@@ -42,7 +42,7 @@ export default async function MyPage() {
   const [{ data: profile }, { data: posts }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("nickname,role,onboarding_completed")
+      .select("nickname,onboarding_completed")
       .eq("id", user.id)
       .single(),
     supabase
@@ -71,7 +71,6 @@ export default async function MyPage() {
         <span className="eyebrow">MY WRITING</span>
         <h1>{profile.nickname}님의 글</h1>
         <div className="my-summary">
-          <span>{profile.role}</span>
           <strong>내가 쓴 글 {posts?.length ?? 0}편</strong>
         </div>
       </section>

@@ -67,7 +67,6 @@
 .my-hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
 .my-hero h1 { margin: 14px 0 22px; font-size: clamp(38px, 7vw, 64px); line-height: 1.15; letter-spacing: -.05em; }
 .my-summary { display: flex; align-items: center; gap: 14px; color: #696b63; }
-.my-summary span { padding: 5px 9px; border: 1px solid var(--line); font-size: 12px; font-weight: 700; }
 .my-writing { padding: 42px 0 100px; }
 .my-club-group { margin-bottom: 58px; }
 .my-club-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
