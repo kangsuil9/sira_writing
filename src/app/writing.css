@@ -18,10 +18,18 @@
 .primary-link { display: inline-block; margin-top: 12px; padding: 14px 22px; background: var(--ink); color: white; font-weight: 700; }
 .closed-note { font-size: 15px !important; }
 .post-list { padding: 38px 0 90px; }
-.post-cards { display: grid; }
-.post-card { padding: 25px 4px; border-bottom: 1px solid var(--line); }
-.post-card h3 { margin: 0 0 10px; font-size: 21px; }
-.post-card div { color: #77796f; font-size: 14px; }
+.post-cards { display: grid; gap: 18px; padding-top: 24px; }
+.post-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #fffdf8; transition: transform .15s ease, border-color .15s ease; }
+.post-card:hover { transform: translateY(-2px); border-color: #a9aa9f; }
+.post-card-author { display: flex; align-items: center; gap: 12px; padding: 22px 24px 0; }
+.profile-image { width: 44px; height: 44px; flex: none; border: 1px solid var(--line); border-radius: 50%; object-fit: cover; background: #f0eee7; }
+.profile-fallback { display: grid; place-items: center; color: var(--green); font-size: 17px; font-weight: 700; }
+.post-card-author > div { display: grid; gap: 4px; }
+.post-card-author strong { font-size: 15px; }
+.post-card-author time { color: #85877f; font-size: 13px; }
+.post-card h3 { margin: 24px 24px 12px; font-size: 22px; line-height: 1.45; }
+.post-preview { display: -webkit-box; overflow: hidden; margin: 0 24px 25px; color: #66685f; line-height: 1.75; white-space: pre-line; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.post-card-foot { display: flex; align-items: center; gap: 6px; padding: 14px 24px; border-top: 1px solid #e5e1d7; color: #77796f; font-size: 14px; }
 .editor-head { max-width: 760px; padding-top: 50px; }
 .editor-head h1 { font-size: 28px; line-height: 1.4; }
 .editor-wrap { max-width: 760px; padding-bottom: 80px; }
