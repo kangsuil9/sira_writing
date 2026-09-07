@@ -49,6 +49,7 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   const [uploading, setUploading] = useState(false);
   const [plusTop, setPlusTop] = useState(8);
   const editorRef = useRef<HTMLDivElement>(null);
+  const editorInitializedRef = useRef(false);
   const bodyInputRef = useRef<HTMLInputElement>(null);
   const bodyHtmlInputRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -61,6 +62,13 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   });
   const dirtyRef = useRef(false);
   const supabase = useMemo(() => createClient(), []);
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor || editorInitializedRef.current) return;
+    editor.innerHTML = initialBodyHtml;
+    editorInitializedRef.current = true;
+  }, [initialBodyHtml]);
 
   useEffect(() => {
     latestRef.current.title = title;
@@ -267,7 +275,6 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
           contentEditable
           suppressContentEditableWarning
           data-placeholder="지금 떠오르는 생각부터 천천히 적어보세요."
-          dangerouslySetInnerHTML={{ __html: initialBodyHtml }}
           onInput={updateEditor}
           onKeyUp={rememberSelection}
           onMouseUp={rememberSelection}
