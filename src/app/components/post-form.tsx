@@ -37,10 +37,8 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
     initialState,
   );
   const [title, setTitle] = useState(initial?.title ?? "");
-  const [body, setBody] = useState(initial?.body ?? "");
-  const [bodyHtml, setBodyHtml] = useState(
-    initial?.bodyHtml || textToHtml(initial?.body ?? ""),
-  );
+  const initialBody = initial?.body ?? "";
+  const initialBodyHtml = initial?.bodyHtml || textToHtml(initialBody);
   const [question, setQuestion] = useState(
     initial?.discussionQuestion ?? "",
   );
@@ -51,15 +49,23 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   const [uploading, setUploading] = useState(false);
   const [plusTop, setPlusTop] = useState(8);
   const editorRef = useRef<HTMLDivElement>(null);
+  const bodyInputRef = useRef<HTMLInputElement>(null);
+  const bodyHtmlInputRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const selectionRef = useRef<Range | null>(null);
-  const latestRef = useRef({ title, body, bodyHtml, question });
+  const latestRef = useRef({
+    title,
+    body: initialBody,
+    bodyHtml: initialBodyHtml,
+    question,
+  });
   const dirtyRef = useRef(false);
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
-    latestRef.current = { title, body, bodyHtml, question };
-  }, [title, body, bodyHtml, question]);
+    latestRef.current.title = title;
+    latestRef.current.question = question;
+  }, [title, question]);
 
   useEffect(() => {
     if (post) return;
@@ -102,10 +108,13 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   function updateEditor() {
     const editor = editorRef.current;
     if (!editor) return;
-    setBody(editor.innerText.trim());
-    setBodyHtml(editor.innerHTML);
+    const nextBody = editor.innerText.trim();
+    const nextBodyHtml = editor.innerHTML;
+    latestRef.current.body = nextBody;
+    latestRef.current.bodyHtml = nextBodyHtml;
+    if (bodyInputRef.current) bodyInputRef.current.value = nextBody;
+    if (bodyHtmlInputRef.current) bodyHtmlInputRef.current.value = nextBodyHtml;
     markChanged();
-    rememberSelection();
   }
 
   function rememberSelection() {
@@ -177,8 +186,8 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   return (
     <form action={action} className="post-form rich-post-form">
       <input type="hidden" name="clubId" value={clubId} />
-      <input type="hidden" name="body" value={body} />
-      <input type="hidden" name="bodyHtml" value={bodyHtml} />
+      <input ref={bodyInputRef} type="hidden" name="body" defaultValue={initialBody} />
+      <input ref={bodyHtmlInputRef} type="hidden" name="bodyHtml" defaultValue={initialBodyHtml} />
       {!post && <input type="hidden" name="draftId" value={draftId} />}
       {post && <input type="hidden" name="postId" value={post.id} />}
 
@@ -258,7 +267,7 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
           contentEditable
           suppressContentEditableWarning
           data-placeholder="지금 떠오르는 생각부터 천천히 적어보세요."
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          dangerouslySetInnerHTML={{ __html: initialBodyHtml }}
           onInput={updateEditor}
           onKeyUp={rememberSelection}
           onMouseUp={rememberSelection}
