@@ -114,6 +114,11 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   }
 
   function updateEditor() {
+    syncEditorFields();
+    markChanged();
+  }
+
+  function syncEditorFields() {
     const editor = editorRef.current;
     if (!editor) return;
     const nextBody = editor.innerText.trim();
@@ -122,7 +127,6 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
     latestRef.current.bodyHtml = nextBodyHtml;
     if (bodyInputRef.current) bodyInputRef.current.value = nextBody;
     if (bodyHtmlInputRef.current) bodyHtmlInputRef.current.value = nextBodyHtml;
-    markChanged();
   }
 
   function rememberSelection() {
@@ -192,7 +196,11 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
   }
 
   return (
-    <form action={action} className="post-form rich-post-form">
+    <form
+      action={action}
+      className="post-form rich-post-form"
+      onSubmit={syncEditorFields}
+    >
       <input type="hidden" name="clubId" value={clubId} />
       <input ref={bodyInputRef} type="hidden" name="body" defaultValue={initialBody} />
       <input ref={bodyHtmlInputRef} type="hidden" name="bodyHtml" defaultValue={initialBodyHtml} />

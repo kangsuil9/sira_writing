@@ -2,7 +2,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { sanitizePostHtml } from "@/lib/post-content";
+import {
+  plainTextFromPostHtml,
+  sanitizePostHtml,
+} from "@/lib/post-content";
 export type WritingState = { error?: string; saved?: boolean };
 async function currentUser() {
   const supabase = await createClient();
@@ -14,8 +17,10 @@ export async function createPost(_: WritingState, formData: FormData): Promise<W
   const { supabase, user } = await currentUser();
   const clubId = String(formData.get("clubId") ?? "");
   const title = String(formData.get("title") ?? "").trim();
-  const body = String(formData.get("body") ?? "").trim();
   const bodyHtml = sanitizePostHtml(String(formData.get("bodyHtml") ?? ""));
+  const submittedBody = String(formData.get("body") ?? "").trim();
+  const recoveredBody = plainTextFromPostHtml(bodyHtml);
+  const body = recoveredBody || submittedBody;
   const discussionQuestion = String(formData.get("discussionQuestion") ?? "").trim();
   const draftId = String(formData.get("draftId") ?? "");
   if (title.length < 1 || title.length > 200) return { error: "제목은 1~200자로 입력해 주세요." };
@@ -42,8 +47,10 @@ export async function updatePost(_: WritingState, formData: FormData): Promise<W
   const { supabase, user } = await currentUser();
   const postId = String(formData.get("postId") ?? "");
   const title = String(formData.get("title") ?? "").trim();
-  const body = String(formData.get("body") ?? "").trim();
   const bodyHtml = sanitizePostHtml(String(formData.get("bodyHtml") ?? ""));
+  const submittedBody = String(formData.get("body") ?? "").trim();
+  const recoveredBody = plainTextFromPostHtml(bodyHtml);
+  const body = recoveredBody || submittedBody;
   const discussionQuestion = String(formData.get("discussionQuestion") ?? "").trim();
   if (title.length < 1 || title.length > 200) return { error: "제목은 1~200자로 입력해 주세요." };
   if (body.length < 1 || body.length > 50000) return { error: "본문은 1~50,000자로 입력해 주세요." };
