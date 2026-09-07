@@ -10,6 +10,7 @@ import {
 } from "@/app/writing-actions";
 import { createClient } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
+import { sanitizePostHtml } from "@/lib/post-content";
 
 export default async function PostPage({
   params,
@@ -28,7 +29,7 @@ export default async function PostPage({
       supabase
         .from("posts")
         .select(
-          "id,title,body,discussion_question,author_id,published_at,updated_at,profiles:profiles!posts_author_id_fkey(nickname),clubs(id,topic_sentence,status,cycles(sequence,starts_at,ends_at))",
+          "id,title,body,body_html,discussion_question,author_id,published_at,updated_at,profiles:profiles!posts_author_id_fkey(nickname),clubs(id,topic_sentence,status,cycles(sequence,starts_at,ends_at))",
         )
         .eq("id", postId)
         .single(),
@@ -88,7 +89,16 @@ export default async function PostPage({
           </div>
         )}
 
-        <div className="article-body">{post.body}</div>
+        {post.body_html ? (
+          <div
+            className="article-body rich-article-body"
+            dangerouslySetInnerHTML={{
+              __html: sanitizePostHtml(post.body_html),
+            }}
+          />
+        ) : (
+          <div className="article-body">{post.body}</div>
+        )}
 
         {post.discussion_question && (
           <section className="discussion-question">

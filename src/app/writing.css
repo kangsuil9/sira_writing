@@ -86,3 +86,41 @@
 .my-post-card p { margin: 9px 0 0; color: #74766e; line-height: 1.6; }
 .my-post-card time { flex: none; color: #85877f; font-size: 14px; }
 @media (max-width: 720px) { .my-hero { padding-top: 48px; } .my-club-head { align-items: flex-start; } .my-post-card { display: grid; gap: 12px; } }
+.hero { padding-top: 64px; }
+.hero h1 { max-width: 900px; font-size: clamp(28px, 3.5vw, 38px); line-height: 1.3; letter-spacing: -.035em; }
+.editor-head { max-width: 940px; padding-top: 44px; }
+.editor-head h1 { margin-bottom: 8px; font-size: 18px; color: #77796f; }
+.editor-wrap { max-width: 940px; padding-bottom: 100px; }
+.rich-post-form { padding-top: 10px; }
+.post-form .title-input { width: 100%; padding: 24px 0 30px; border: 0; outline: 0; background: transparent; font-size: clamp(32px, 5vw, 48px); font-weight: 700; letter-spacing: -.04em; }
+.editor-toolbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 5px; overflow-x: auto; padding: 12px 0; background: rgba(255,255,255,.96); backdrop-filter: blur(8px); }
+.post-form .editor-toolbar button { flex: none; width: 36px; height: 36px; margin: 0; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font-weight: 500; }
+.post-form .editor-toolbar button:hover { background: var(--soft); }
+.post-form .editor-toolbar .quote-tool { width: auto; padding: 0 10px; font-size: 13px; }
+.editor-toolbar select { flex: none; height: 36px; padding: 0 28px 0 10px; border: 0; border-radius: 7px; background: var(--soft); color: var(--ink); }
+.editor-field { position: relative; min-height: 65vh; padding-left: 2px; }
+.rich-editor { min-height: 65vh; padding: 28px 0 120px; outline: none; font-size: 18px; line-height: 1.95; overflow-wrap: anywhere; }
+.rich-editor:empty::before { color: #a0a198; content: attr(data-placeholder); pointer-events: none; }
+.rich-editor blockquote, .rich-article-body blockquote { margin: 0; padding: 10px 0 10px 22px; border-left: 3px solid var(--green); }
+.rich-editor img, .rich-article-body img { display: block; max-width: 100%; height: auto; margin: 28px auto; border-radius: 10px; }
+.post-form .editor-plus { position: absolute; left: -50px; z-index: 3; display: grid; place-items: center; width: 32px; height: 32px; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: #65675f; font-size: 22px; font-weight: 300; line-height: 1; }
+.post-form .image-add-button { position: absolute; left: -8px; z-index: 4; width: auto; margin: 0; padding: 8px 12px; border: 0; border-radius: 8px; background: var(--ink); color: #fff; font-size: 13px; white-space: nowrap; }
+.file-input { display: none; }
+.rich-post-form .optional-question { display: block; margin: 16px 0 0 !important; padding-top: 20px; }
+.rich-post-form .optional-question textarea { background: var(--soft); border: 0; border-radius: 12px; }
+.draft-status { margin: 12px 0; color: #85877f; font-size: 13px; }
+.draft-status.saved { color: var(--green); }
+.draft-status.error { color: #a1392c; }
+.post-form .publish-button { margin-top: 8px; border-radius: 8px; }
+.draft-list-link { padding: 9px 13px; border-radius: 8px; background: var(--soft); color: var(--ink); font-size: 14px; font-weight: 700; }
+.drafts-head { padding: 64px 0 30px; }
+.drafts-head h1 { margin: 0 0 10px; font-size: clamp(36px, 6vw, 54px); letter-spacing: -.05em; }
+.drafts-head p { color: #74766e; }
+.drafts-list { display: grid; gap: 14px; padding-bottom: 100px; }
+.draft-card { display: block; padding: 26px 28px; border-radius: 14px; background: var(--soft); }
+.draft-card.closed { opacity: .58; }
+.draft-card-meta { display: flex; justify-content: space-between; gap: 20px; color: #77796f; font-size: 13px; }
+.draft-card h2 { margin: 18px 0 8px; font-size: 23px; }
+.draft-card > p { display: -webkit-box; overflow: hidden; margin: 0 0 20px; color: #686a62; line-height: 1.7; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.draft-card > strong { color: var(--green); font-size: 14px; }
+@media (max-width: 720px) { .editor-head, .editor-wrap { width: min(100% - 40px, 940px); } .post-form .editor-plus { left: -38px; } .draft-card-meta { display: grid; gap: 6px; } .my-summary { align-items: flex-start; flex-direction: column; } }

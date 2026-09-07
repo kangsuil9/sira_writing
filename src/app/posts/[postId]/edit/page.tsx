@@ -7,10 +7,10 @@ export default async function EditPostPage({ params }: { params: Promise<{ postI
   const { postId } = await params;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect("/login");
-  const { data: post } = await supabase.from("posts").select("id,title,body,discussion_question,author_id,club_id,clubs(status,topic_sentence,cycles(starts_at,ends_at))").eq("id", postId).single();
+  const { data: post } = await supabase.from("posts").select("id,title,body,body_html,discussion_question,author_id,club_id,clubs(status,topic_sentence,cycles(starts_at,ends_at))").eq("id", postId).single();
   if (!post) notFound();
   const club = Array.isArray(post.clubs) ? post.clubs[0] : post.clubs;
   const cycle = Array.isArray(club?.cycles) ? club.cycles[0] : club?.cycles;
   if (post.author_id !== user.id || !isWritingOpen(club?.status ?? "", cycle?.starts_at, cycle?.ends_at)) redirect(`/posts/${postId}`);
-  return <main><header className="shell header"><Link className="brand" href="/">시라</Link><Link href={`/posts/${postId}`}>나가기</Link></header><section className="shell editor-head"><span className="eyebrow">EDIT</span><h1>{club?.topic_sentence}</h1></section><section className="shell editor-wrap"><PostForm clubId={post.club_id} post={{ id: post.id, title: post.title, body: post.body, discussionQuestion: post.discussion_question }} /></section></main>;
+  return <main><header className="shell header"><Link className="brand" href="/">시라</Link><Link href={`/posts/${postId}`}>나가기</Link></header><section className="shell editor-head"><h1>{club?.topic_sentence}</h1></section><section className="shell editor-wrap"><PostForm clubId={post.club_id} userId={user.id} draftId={post.id} post={{ id: post.id, title: post.title, body: post.body, bodyHtml: post.body_html, discussionQuestion: post.discussion_question }} /></section></main>;
 }

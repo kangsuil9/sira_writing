@@ -39,7 +39,7 @@ export default async function MyPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: posts }] = await Promise.all([
+  const [{ data: profile }, { data: posts }, { count: draftCount }] = await Promise.all([
     supabase
       .from("profiles")
       .select("nickname,onboarding_completed")
@@ -52,6 +52,10 @@ export default async function MyPage() {
       )
       .eq("author_id", user.id)
       .order("published_at", { ascending: false }),
+    supabase
+      .from("post_drafts")
+      .select("id", { count: "exact", head: true })
+      .eq("author_id", user.id),
   ]);
 
   if (!profile?.onboarding_completed) redirect("/onboarding");
@@ -72,6 +76,9 @@ export default async function MyPage() {
         <h1>{profile.nickname}님의 글</h1>
         <div className="my-summary">
           <strong>내가 쓴 글 {posts?.length ?? 0}편</strong>
+          <Link className="draft-list-link" href="/my/drafts">
+            임시저장 글 {draftCount ?? 0}개
+          </Link>
         </div>
       </section>
 

@@ -68,13 +68,7 @@ export default async function HomePage() {
       </header>
 
       <section className="shell hero">
-        <span className="eyebrow">SIRA WRITING</span>
-        <h1>
-          글쓰기로 돌보는
-          <br />
-          우리의 균형
-        </h1>
-        <p>{profile.nickname}님, 오늘은 어떤 이야기를 쓰고 싶나요?</p>
+        <h1>독서는 다 하지만 글쓰기는 소수만 한다</h1>
       </section>
 
       <ClubSection
