@@ -1,17 +1,17 @@
 .home-clubs { padding-bottom: 64px; }
 .home-clubs + .home-clubs { padding-top: 10px; padding-bottom: 100px; }
 .club-empty { margin-bottom: 0; }
-.section-title { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.section-title { display: flex; align-items: baseline; justify-content: space-between; }
 .section-title h2 { font-size: 28px; }
 .section-title span { color: #74766e; }
-.home-club-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; padding-top: 22px; }
-.home-club-card { padding: 28px; border: 1px solid var(--line); background: #fffdf8; transition: transform .15s ease, border-color .15s ease; }
-.home-club-card:hover { transform: translateY(-2px); border-color: #a9aa9f; }
+.home-club-grid { display: grid; grid-template-columns: 1fr; gap: 14px; padding-top: 22px; }
+.home-club-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 32px; padding: 28px 30px; border-radius: 16px; background: var(--soft); transition: transform .15s ease, background .15s ease; }
+.home-club-card:hover { transform: translateY(-2px); background: #f0f1eb; }
 .club-meta, .article-topic { color: var(--green); font-size: 14px; font-weight: 700; }
-.home-club-card h3 { margin: 18px 0 10px; font-size: 23px; line-height: 1.4; }
-.home-club-card p { color: #686a62; line-height: 1.7; }
-.card-foot { display: flex; justify-content: space-between; margin-top: 28px; color: #77796f; font-size: 14px; }
-.club-hero { padding: 64px 0 52px; border-bottom: 1px solid var(--line); }
+.home-club-card h3 { margin: 12px 0 8px; font-size: 24px; line-height: 1.4; }
+.home-club-card p { max-width: 900px; margin: 0; color: #686a62; line-height: 1.7; }
+.card-foot { display: grid; justify-items: end; gap: 8px; color: #77796f; font-size: 14px; white-space: nowrap; }
+.club-hero { padding: 64px 0 52px; }
 .club-hero h1 { max-width: 850px; margin: 15px 0; font-size: clamp(34px, 6vw, 58px); line-height: 1.2; letter-spacing: -.04em; }
 .club-hero > p { max-width: 760px; color: #60625b; font-size: 18px; line-height: 1.8; }
 .period { margin: 22px 0; color: #77796f; }
@@ -19,8 +19,8 @@
 .closed-note { font-size: 15px !important; }
 .post-list { padding: 38px 0 90px; }
 .post-cards { display: grid; gap: 18px; padding-top: 24px; }
-.post-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #fffdf8; transition: transform .15s ease, border-color .15s ease; }
-.post-card:hover { transform: translateY(-2px); border-color: #a9aa9f; }
+.post-card { overflow: hidden; border-radius: 14px; background: var(--soft); transition: transform .15s ease, background .15s ease; }
+.post-card:hover { transform: translateY(-2px); background: #f0f1eb; }
 .post-card-author { display: flex; align-items: center; gap: 12px; padding: 22px 24px 0; }
 .profile-image { width: 44px; height: 44px; flex: none; border: 1px solid var(--line); border-radius: 50%; object-fit: cover; background: #f0eee7; }
 .profile-fallback { display: grid; place-items: center; color: var(--green); font-size: 17px; font-weight: 700; }
@@ -29,7 +29,7 @@
 .post-card-author time { color: #85877f; font-size: 13px; }
 .post-card h3 { margin: 24px 24px 12px; font-size: 22px; line-height: 1.45; }
 .post-preview { display: -webkit-box; overflow: hidden; margin: 0 24px 25px; color: #66685f; line-height: 1.75; white-space: pre-line; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-.post-card-foot { display: flex; align-items: center; gap: 6px; padding: 14px 24px; border-top: 1px solid #e5e1d7; color: #77796f; font-size: 14px; }
+.post-card-foot { display: flex; align-items: center; gap: 6px; padding: 14px 24px 20px; color: #77796f; font-size: 14px; }
 .editor-head { max-width: 760px; padding-top: 50px; }
 .editor-head h1 { font-size: 28px; line-height: 1.4; }
 .editor-wrap { max-width: 760px; padding-bottom: 80px; }
@@ -43,9 +43,9 @@
 .article-actions { display: flex; gap: 14px; justify-content: flex-end; margin: 25px 0; }
 .article-actions form { margin: 0; }
 .article-actions button { padding: 0; border: 0; background: none; color: #a1392c; cursor: pointer; }
-.article-body { margin-top: 55px; padding-top: 45px; border-top: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font-family: Georgia, "Nanum Myeongjo", serif; font-size: 19px; line-height: 2; }
-@media (max-width: 720px) { .home-club-grid { grid-template-columns: 1fr; } .club-hero { padding-top: 44px; } .article { padding-top: 46px; } }
-.optional-question { margin-top: 34px !important; padding-top: 28px; border-top: 1px solid var(--line); }
+.article-body { margin-top: 55px; padding-top: 20px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 19px; line-height: 2; }
+@media (max-width: 720px) { .home-club-card { grid-template-columns: 1fr; gap: 20px; padding: 24px; } .card-foot { display: flex; justify-content: space-between; } .club-hero { padding-top: 44px; } .article { padding-top: 46px; } }
+.optional-question { margin-top: 34px !important; padding-top: 28px; }
 .optional-question small { margin-left: 6px; color: #8a8c84; font-weight: 400; }
 .discussion-question { margin-top: 44px; padding: 24px; background: #eeeae0; }
 .discussion-question span { color: var(--green); font-size: 14px; font-weight: 700; }
@@ -54,12 +54,12 @@
 .read-button { padding: 12px 20px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); cursor: pointer; }
 .read-button.marked { border-color: var(--green); background: #e4ebe1; color: #365338; }
 .read-button span { margin-left: 5px; }
-.continuations { margin-top: 18px; padding-top: 20px; border-top: 1px solid var(--line); }
+.continuations { margin-top: 18px; padding-top: 20px; }
 .continuation-form { padding: 24px 0 30px; }
 .continuation-form textarea, .continuation-edit textarea { width: 100%; padding: 14px; border: 1px solid var(--line); background: #fffdf8; font: inherit; line-height: 1.7; resize: vertical; }
 .continuation-form button, .continuation-edit button { margin-top: 8px; padding: 10px 15px; border: 0; background: var(--ink); color: white; cursor: pointer; }
 .continuation-list { display: grid; }
-.continuation { padding: 24px 2px; border-bottom: 1px solid var(--line); }
+.continuation { margin-top: 12px; padding: 24px; border-radius: 12px; background: var(--soft); }
 .continuation-byline { display: flex; align-items: baseline; justify-content: space-between; }
 .continuation-byline span { color: #85877f; font-size: 13px; }
 .continuation > p { margin: 14px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
@@ -70,18 +70,18 @@
 .continuation-actions .delete-action { color: #a1392c; }
 .continuation-edit-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .continuation-edit-actions .secondary-action { border: 1px solid var(--line); background: transparent; color: var(--ink); }
-.continuation-compose { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line); }
+.continuation-compose { margin-top: 34px; padding-top: 28px; }
 .continuation-compose h2 { margin: 0; font-size: 24px; }
-.my-hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
+.my-hero { padding: 72px 0 48px; }
 .my-hero h1 { margin: 14px 0 22px; font-size: clamp(38px, 7vw, 64px); line-height: 1.15; letter-spacing: -.05em; }
 .my-summary { display: flex; align-items: center; gap: 14px; color: #696b63; }
 .my-writing { padding: 42px 0 100px; }
 .my-club-group { margin-bottom: 58px; }
-.my-club-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.my-club-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 20px; }
 .my-club-head h2 { margin: 10px 0 0; font-size: 27px; line-height: 1.4; }
 .my-club-head > span { flex: none; color: #77796f; }
-.my-post-list { display: grid; }
-.my-post-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; padding: 25px 4px; border-bottom: 1px solid var(--line); }
+.my-post-list { display: grid; gap: 12px; }
+.my-post-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; padding: 24px; border-radius: 12px; background: var(--soft); }
 .my-post-card h3 { margin: 0; font-size: 21px; line-height: 1.45; }
 .my-post-card p { margin: 9px 0 0; color: #74766e; line-height: 1.6; }
 .my-post-card time { flex: none; color: #85877f; font-size: 14px; }

@@ -139,11 +139,13 @@ function ClubSection({
               href={`/clubs/${club.id}`}
               key={club.id}
             >
-              <div className="club-meta">
-                {club.cycle?.sequence}기 · {club.category}
+              <div className="home-club-main">
+                <div className="club-meta">
+                  {club.cycle?.sequence}기 · {club.category}
+                </div>
+                <h3>{club.topic_sentence}</h3>
+                <p>{club.description}</p>
               </div>
-              <h3>{club.topic_sentence}</h3>
-              <p>{club.description}</p>
               <div className="card-foot">
                 <span>{active ? "글쓰기 진행 중" : "지난 클럽"}</span>
                 <span>글 {club.postCount}편</span>
