@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOut } from "./actions";
 import { createClient } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
 
@@ -14,7 +13,7 @@ export default async function HomePage() {
   const [{ data: profile }, { data: clubs }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("nickname,onboarding_completed,role")
+      .select("onboarding_completed")
       .eq("id", user.id)
       .single(),
     supabase
@@ -54,19 +53,6 @@ export default async function HomePage() {
 
   return (
     <main>
-      <header className="shell header">
-        <div className="brand">시라</div>
-        <div className="header-actions">
-          <Link href="/my">마이페이지</Link>
-          {profile.role === "ADMIN" && (
-            <Link href="/admin/clubs">클럽 관리</Link>
-          )}
-          <form action={signOut}>
-            <button className="logout">로그아웃</button>
-          </form>
-        </div>
-      </header>
-
       <section className="shell hero">
         <h1>독서는 다 하지만 글쓰기는 소수만 한다</h1>
       </section>

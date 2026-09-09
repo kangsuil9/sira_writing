@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
+import { signOut } from "@/app/actions";
 
 type Cycle = {
   sequence: number;
@@ -42,7 +43,7 @@ export default async function MyPage() {
   const [{ data: profile }, { data: posts }, { count: draftCount }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("nickname,onboarding_completed")
+      .select("nickname,onboarding_completed,role")
       .eq("id", user.id)
       .single(),
     supabase
@@ -64,13 +65,6 @@ export default async function MyPage() {
 
   return (
     <main>
-      <header className="shell header">
-        <Link className="brand" href="/">
-          시라
-        </Link>
-        <Link href="/">클럽 목록</Link>
-      </header>
-
       <section className="shell my-hero">
         <span className="eyebrow">MY WRITING</span>
         <h1>{profile.nickname}님의 글</h1>
@@ -79,6 +73,14 @@ export default async function MyPage() {
           <Link className="draft-list-link" href="/my/drafts">
             임시저장 글 {draftCount ?? 0}개
           </Link>
+        </div>
+        <div className="my-account-actions">
+          {profile.role === "ADMIN" && (
+            <Link href="/admin/clubs">클럽 관리</Link>
+          )}
+          <form action={signOut}>
+            <button type="submit">로그아웃</button>
+          </form>
         </div>
       </section>
 
