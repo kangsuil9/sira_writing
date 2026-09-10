@@ -45,11 +45,11 @@ export function BottomNavigation() {
           <Link
             className={item.active ? "bottom-nav-item active" : "bottom-nav-item"}
             href={item.href}
+            aria-label={item.label}
             aria-current={item.active ? "page" : undefined}
             key={item.href}
           >
             {item.icon}
-            <span>{item.label}</span>
           </Link>
         ))}
       </div>

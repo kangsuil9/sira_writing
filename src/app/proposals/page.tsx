@@ -11,12 +11,7 @@ export default async function ProposalsPage() {
   return (
     <main>
       <section className="shell proposal-hero">
-        <span className="eyebrow">NEXT WRITING</span>
-        <h1>
-          다음 글쓰기를
-          <br />
-          함께 제안하는 곳
-        </h1>
+        <h1>다음 글쓰기를 함께 제안하는 곳</h1>
         <p>
           혼자 생각해온 질문이 있나요?
           <br />
