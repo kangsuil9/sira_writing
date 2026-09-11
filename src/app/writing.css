@@ -73,7 +73,7 @@
 .continuation-compose { margin-top: 34px; padding-top: 28px; }
 .continuation-compose h2 { margin: 0; font-size: 24px; }
 .my-hero { padding: 72px 0 48px; }
-.my-hero h1 { margin: 14px 0 22px; font-size: clamp(38px, 7vw, 64px); line-height: 1.15; letter-spacing: -.05em; }
+.my-hero h1 { margin: 0 0 22px; font-size: clamp(19px, 3.5vw, 32px); line-height: 1.2; letter-spacing: -.035em; }
 .my-summary { display: flex; align-items: center; gap: 14px; color: #696b63; }
 .my-writing { padding: 42px 0 100px; }
 .my-club-group { margin-bottom: 58px; }
@@ -144,3 +144,36 @@
 .proposal-sections p { min-height: 54px; color: #696b63; line-height: 1.7; }
 .proposal-sections strong { display: block; margin-top: 26px; color: #85877f; font-size: 14px; }
 @media (max-width: 720px) { .bottom-navigation { bottom: 10px; width: calc(100% - 24px); } .proposal-hero { padding-top: 54px; } .proposal-hero h1 { font-size: clamp(18px, 5.5vw, 24px); } }
+.memo-launcher { position: fixed; right: max(16px, calc((100vw - 1320px) / 2)); bottom: 96px; z-index: 55; width: 62px; height: 62px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: #fff; box-shadow: 0 10px 28px rgba(28,31,25,.22); font-weight: 750; cursor: pointer; }
+.memo-launcher:hover { transform: translateY(-2px); }
+.memo-dialog-backdrop { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 20px; background: rgba(24,26,22,.3); }
+.memo-dialog { width: min(520px, 100%); padding: 26px; border-radius: 18px; background: #fff; box-shadow: 0 24px 70px rgba(20,22,18,.2); }
+.memo-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.memo-dialog-head h2 { margin: 0; font-size: 22px; }
+.memo-dialog-head button { padding: 2px 7px; border: 0; background: transparent; color: #77796f; font-size: 27px; cursor: pointer; }
+.memo-form { display: grid; gap: 12px; margin-top: 22px; }
+.memo-form input, .memo-form textarea { width: 100%; padding: 14px 15px; border: 0; border-radius: 10px; outline: 0; background: var(--soft); color: var(--ink); font: inherit; }
+.memo-form textarea { line-height: 1.75; resize: vertical; }
+.memo-form input:focus, .memo-form textarea:focus { box-shadow: inset 0 0 0 2px rgba(73,96,74,.28); }
+.memo-form .error { margin: 0; }
+.memo-form-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.memo-form-actions button { padding: 11px 17px; border: 0; border-radius: 8px; background: var(--ink); color: #fff; font-weight: 700; cursor: pointer; }
+.memo-form-actions button:disabled { opacity: .5; cursor: default; }
+.memo-form-actions .secondary-action { background: var(--soft); color: #62645d; }
+.notes-head { padding: 64px 0 38px; }
+.notes-head > a { color: #77796f; font-size: 14px; }
+.notes-head h1 { margin: 24px 0 10px; font-size: clamp(30px, 5vw, 46px); letter-spacing: -.045em; }
+.notes-head p { color: #74766e; }
+.notes-list { display: grid; gap: 14px; padding-bottom: 140px; }
+.note-card { padding: 26px 28px; border-radius: 14px; background: var(--soft); }
+.note-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
+.note-card-head h2 { margin: 0; font-size: 22px; }
+.note-card-head time { flex: none; color: #85877f; font-size: 13px; }
+.note-card > p { display: -webkit-box; overflow: hidden; margin: 18px 0 0; color: #62645d; line-height: 1.75; white-space: pre-line; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.note-card-actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 22px; }
+.note-card-actions form { margin: 0; }
+.note-card-actions button { padding: 2px 0; border: 0; background: transparent; color: #62645d; cursor: pointer; }
+.note-card-actions .delete-action { color: #a1392c; }
+.note-edit-form { margin-top: 0; }
+.notes-empty { margin-top: 0; }
+@media (max-width: 720px) { .memo-launcher { right: 16px; bottom: 88px; width: 58px; height: 58px; } .memo-dialog-backdrop { align-items: end; padding: 0; } .memo-dialog { padding: 24px 20px calc(24px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; } .note-card { padding: 22px; } .note-card-head { display: grid; gap: 8px; } }

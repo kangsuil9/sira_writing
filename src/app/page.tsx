@@ -54,7 +54,7 @@ export default async function HomePage() {
   return (
     <main>
       <section className="shell hero">
-        <h1>독서는 다 하지만 글쓰기는 소수만 한다</h1>
+        <h1>누구나 읽는다. 하지만 아무나 못쓴다.</h1>
       </section>
 
       <ClubSection

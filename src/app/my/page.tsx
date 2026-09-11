@@ -40,7 +40,7 @@ export default async function MyPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: posts }, { count: draftCount }] = await Promise.all([
+  const [{ data: profile }, { data: posts }, { count: draftCount }, { count: noteCount }] = await Promise.all([
     supabase
       .from("profiles")
       .select("nickname,onboarding_completed,role")
@@ -57,6 +57,10 @@ export default async function MyPage() {
       .from("post_drafts")
       .select("id", { count: "exact", head: true })
       .eq("author_id", user.id),
+    supabase
+      .from("writing_notes")
+      .select("id", { count: "exact", head: true })
+      .eq("author_id", user.id),
   ]);
 
   if (!profile?.onboarding_completed) redirect("/onboarding");
@@ -66,12 +70,14 @@ export default async function MyPage() {
   return (
     <main>
       <section className="shell my-hero">
-        <span className="eyebrow">MY WRITING</span>
         <h1>{profile.nickname}님의 글</h1>
         <div className="my-summary">
           <strong>내가 쓴 글 {posts?.length ?? 0}편</strong>
           <Link className="draft-list-link" href="/my/drafts">
             임시저장 글 {draftCount ?? 0}개
+          </Link>
+          <Link className="draft-list-link" href="/my/notes">
+            나의 글 소재 {noteCount ?? 0}개
           </Link>
         </div>
         <div className="my-account-actions">
