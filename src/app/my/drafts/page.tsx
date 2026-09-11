@@ -13,7 +13,7 @@ export default async function DraftsPage() {
   const { data: drafts } = await supabase
     .from("post_drafts")
     .select(
-      "id,title,body,updated_at,club_id,clubs(topic_sentence,status,cycles(starts_at,ends_at))",
+      "id,title,body,updated_at,club_id,clubs(topic_sentence,status,starts_at,ends_at)",
     )
     .eq("author_id", user.id)
     .order("updated_at", { ascending: false });
@@ -43,13 +43,10 @@ export default async function DraftsPage() {
             const club = Array.isArray(draft.clubs)
               ? draft.clubs[0]
               : draft.clubs;
-            const cycle = Array.isArray(club?.cycles)
-              ? club.cycles[0]
-              : club?.cycles;
             const active = isWritingOpen(
               club?.status ?? "",
-              cycle?.starts_at,
-              cycle?.ends_at,
+              club?.starts_at,
+              club?.ends_at,
             );
             const content = (
               <>

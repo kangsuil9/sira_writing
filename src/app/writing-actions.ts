@@ -26,9 +26,8 @@ export async function createPost(_: WritingState, formData: FormData): Promise<W
   if (title.length < 1 || title.length > 200) return { error: "제목은 1~200자로 입력해 주세요." };
   if (body.length < 1 || body.length > 50000) return { error: "본문은 1~50,000자로 입력해 주세요." };
   if (discussionQuestion.length > 300) return { error: "함께 나누고 싶은 질문은 300자 이하로 입력해 주세요." };
-  const { data: club } = await supabase.from("clubs").select("status,cycles(starts_at,ends_at)").eq("id", clubId).single();
-  const cycle = Array.isArray(club?.cycles) ? club.cycles[0] : club?.cycles;
-  if (!club || club.status !== "ACTIVE" || !cycle || new Date() < new Date(cycle.starts_at) || new Date() > new Date(cycle.ends_at)) return { error: "현재 글을 작성할 수 없는 클럽이에요." };
+  const { data: club } = await supabase.from("clubs").select("status,starts_at,ends_at").eq("id", clubId).single();
+  if (!club || club.status !== "ACTIVE" || new Date() < new Date(club.starts_at) || new Date() > new Date(club.ends_at)) return { error: "현재 글을 작성할 수 없는 클럽이에요." };
   if (bodyHtml.length > 200000) return { error: "본문 서식이 너무 커요. 사진 수를 줄여주세요." };
   const { data, error } = await supabase.from("posts").insert({ club_id: clubId, author_id: user.id, title, body, body_html: bodyHtml || null, discussion_question: discussionQuestion || null }).select("id").single();
   if (error || !data) return { error: "글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
@@ -56,11 +55,10 @@ export async function updatePost(_: WritingState, formData: FormData): Promise<W
   if (body.length < 1 || body.length > 50000) return { error: "본문은 1~50,000자로 입력해 주세요." };
   if (bodyHtml.length > 200000) return { error: "본문 서식이 너무 커요. 사진 수를 줄여주세요." };
   if (discussionQuestion.length > 300) return { error: "함께 나누고 싶은 질문은 300자 이하로 입력해 주세요." };
-  const { data: post } = await supabase.from("posts").select("author_id,club_id,clubs(status,cycles(starts_at,ends_at))").eq("id", postId).single();
+  const { data: post } = await supabase.from("posts").select("author_id,club_id,clubs(status,starts_at,ends_at)").eq("id", postId).single();
   const club = Array.isArray(post?.clubs) ? post.clubs[0] : post?.clubs;
-  const cycle = Array.isArray(club?.cycles) ? club.cycles[0] : club?.cycles;
   if (!post || post.author_id !== user.id) return { error: "작성자만 수정할 수 있어요." };
-  if (club?.status !== "ACTIVE" || !cycle || new Date() < new Date(cycle.starts_at) || new Date() > new Date(cycle.ends_at)) return { error: "종료된 클럽의 글은 수정할 수 없어요." };
+  if (club?.status !== "ACTIVE" || new Date() < new Date(club.starts_at) || new Date() > new Date(club.ends_at)) return { error: "종료된 클럽의 글은 수정할 수 없어요." };
   const { error } = await supabase.from("posts").update({ title, body, body_html: bodyHtml || null, discussion_question: discussionQuestion || null, updated_at: new Date().toISOString() }).eq("id", postId).eq("author_id", user.id);
   if (error) return { error: "글을 수정하지 못했어요." };
   revalidatePath(`/posts/${postId}`); revalidatePath(`/clubs/${post.club_id}`);
@@ -69,20 +67,18 @@ export async function updatePost(_: WritingState, formData: FormData): Promise<W
 export async function deletePost(formData: FormData) {
   const { supabase, user } = await currentUser();
   const postId = String(formData.get("postId") ?? "");
-  const { data: post } = await supabase.from("posts").select("author_id,club_id,clubs(status,cycles(starts_at,ends_at))").eq("id", postId).single();
+  const { data: post } = await supabase.from("posts").select("author_id,club_id,clubs(status,starts_at,ends_at)").eq("id", postId).single();
   const club = Array.isArray(post?.clubs) ? post.clubs[0] : post?.clubs;
-  const cycle = Array.isArray(club?.cycles) ? club.cycles[0] : club?.cycles;
-  if (!post || post.author_id !== user.id || club?.status !== "ACTIVE" || !cycle || new Date() < new Date(cycle.starts_at) || new Date() > new Date(cycle.ends_at)) redirect(`/posts/${postId}`);
+  if (!post || post.author_id !== user.id || club?.status !== "ACTIVE" || new Date() < new Date(club.starts_at) || new Date() > new Date(club.ends_at)) redirect(`/posts/${postId}`);
   const { error } = await supabase.from("posts").delete().eq("id", postId).eq("author_id", user.id);
   if (error) redirect(`/posts/${postId}`);
   revalidatePath(`/clubs/${post.club_id}`);
   redirect(`/clubs/${post.club_id}`);
 }
 async function continuationOpen(supabase: Awaited<ReturnType<typeof createClient>>, postId: string) {
-  const { data: post } = await supabase.from("posts").select("clubs(status,cycles(starts_at,ends_at))").eq("id", postId).single();
+  const { data: post } = await supabase.from("posts").select("clubs(status,starts_at,ends_at)").eq("id", postId).single();
   const club = Array.isArray(post?.clubs) ? post.clubs[0] : post?.clubs;
-  const cycle = Array.isArray(club?.cycles) ? club.cycles[0] : club?.cycles;
-  return Boolean(club?.status === "ACTIVE" && cycle && new Date() >= new Date(cycle.starts_at) && new Date() <= new Date(cycle.ends_at));
+  return Boolean(club?.status === "ACTIVE" && new Date() >= new Date(club.starts_at) && new Date() <= new Date(club.ends_at));
 }
 export async function toggleRead(formData: FormData) {
   const { supabase, user } = await currentUser();

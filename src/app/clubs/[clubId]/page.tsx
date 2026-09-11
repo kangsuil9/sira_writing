@@ -21,7 +21,7 @@ export default async function ClubPage({
       supabase
         .from("clubs")
         .select(
-          "id,category,topic_sentence,description,status,cycles(sequence,starts_at,ends_at)",
+          "id,category,topic_sentence,description,status,starts_at,ends_at",
         )
         .eq("id", clubId)
         .single(),
@@ -38,11 +38,10 @@ export default async function ClubPage({
     notFound();
   }
 
-  const cycle = Array.isArray(club.cycles) ? club.cycles[0] : club.cycles;
   const active = isWritingOpen(
     club.status,
-    cycle?.starts_at,
-    cycle?.ends_at,
+    club.starts_at,
+    club.ends_at,
   );
 
   return (
@@ -56,12 +55,12 @@ export default async function ClubPage({
 
       <section className="shell club-hero">
         <div className="club-meta">
-          {cycle?.sequence}기 · {club.category} · {active ? "활동 중" : "종료"}
+          {club.category} · {active ? "활동 중" : "종료"}
         </div>
         <h1>{club.topic_sentence}</h1>
         <p>{club.description}</p>
         <div className="period">
-          {formatDate(cycle?.starts_at)} – {formatDate(cycle?.ends_at)}
+          {formatDate(club.starts_at)} – {formatDate(club.ends_at)}
         </div>
         {active ? (
           <Link className="primary-link" href={`/clubs/${club.id}/write`}>

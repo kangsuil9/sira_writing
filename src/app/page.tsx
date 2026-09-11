@@ -19,7 +19,7 @@ export default async function HomePage() {
     supabase
       .from("clubs")
       .select(
-        "id,category,topic_sentence,description,status,cycles(sequence,starts_at,ends_at),posts(count)",
+        "id,category,topic_sentence,description,status,starts_at,ends_at,posts(count)",
       )
       .in("status", ["ACTIVE", "COMPLETED"])
       .order("created_at", { ascending: false }),
@@ -28,27 +28,24 @@ export default async function HomePage() {
   if (!profile?.onboarding_completed) redirect("/onboarding");
 
   const preparedClubs = (clubs ?? []).map((club) => {
-    const cycle = Array.isArray(club.cycles)
-      ? club.cycles[0]
-      : club.cycles;
     const postCount = Array.isArray(club.posts)
       ? (club.posts[0]?.count ?? 0)
       : 0;
-    return { ...club, cycle, postCount };
+    return { ...club, postCount };
   });
   const now = new Date();
   const activeClubs = preparedClubs.filter((club) =>
     isWritingOpen(
       club.status,
-      club.cycle?.starts_at,
-      club.cycle?.ends_at,
+      club.starts_at,
+      club.ends_at,
       now,
     ),
   );
   const pastClubs = preparedClubs.filter(
     (club) =>
       club.status === "COMPLETED" ||
-      (club.cycle?.ends_at && new Date(club.cycle.ends_at) < now),
+      (club.ends_at && new Date(club.ends_at) < now),
   );
 
   return (
@@ -80,9 +77,8 @@ type PreparedClub = {
   category: string;
   topic_sentence: string;
   description: string;
-  cycle:
-    | { sequence: number; starts_at: string; ends_at: string }
-    | null;
+  starts_at: string;
+  ends_at: string;
   postCount: number;
 };
 
@@ -121,7 +117,7 @@ function ClubSection({
             >
               <div className="home-club-main">
                 <div className="club-meta">
-                  {club.cycle?.sequence}기 · {club.category}
+                  {club.category}
                 </div>
                 <h3>{club.topic_sentence}</h3>
                 <p>{club.description}</p>

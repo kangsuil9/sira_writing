@@ -4,18 +4,13 @@ import { createClient } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
 import { signOut } from "@/app/actions";
 
-type Cycle = {
-  sequence: number;
-  starts_at: string;
-  ends_at: string;
-};
-
 type Club = {
   id: string;
   category: string;
   topic_sentence: string;
   status: string;
-  cycles: Cycle | Cycle[] | null;
+  starts_at: string;
+  ends_at: string;
 };
 
 type Post = {
@@ -28,7 +23,6 @@ type Post = {
 
 type ClubGroup = {
   club: Club;
-  cycle: Cycle | null;
   posts: Post[];
   active: boolean;
 };
@@ -49,7 +43,7 @@ export default async function MyPage() {
     supabase
       .from("posts")
       .select(
-        "id,title,discussion_question,published_at,clubs(id,category,topic_sentence,status,cycles(sequence,starts_at,ends_at))",
+        "id,title,discussion_question,published_at,clubs(id,category,topic_sentence,status,starts_at,ends_at)",
       )
       .eq("author_id", user.id)
       .order("published_at", { ascending: false }),
@@ -105,7 +99,7 @@ export default async function MyPage() {
               <div className="my-club-head">
                 <div>
                   <div className="club-meta">
-                    {group.cycle?.sequence}기 · {group.club.category} ·{" "}
+                    {group.club.category} ·{" "}
                     {group.active ? "활동 중" : "종료"}
                   </div>
                   <Link href={`/clubs/${group.club.id}`}>
@@ -150,7 +144,6 @@ function groupPosts(posts: Post[]) {
   for (const post of posts) {
     const club = Array.isArray(post.clubs) ? post.clubs[0] : post.clubs;
     if (!club) continue;
-    const cycle = Array.isArray(club.cycles) ? club.cycles[0] : club.cycles;
     const existing = grouped.get(club.id);
 
     if (existing) {
@@ -160,20 +153,16 @@ function groupPosts(posts: Post[]) {
 
     grouped.set(club.id, {
       club,
-      cycle: cycle ?? null,
       posts: [post],
       active: isWritingOpen(
         club.status,
-        cycle?.starts_at,
-        cycle?.ends_at,
+        club.starts_at,
+        club.ends_at,
       ),
     });
   }
 
   return [...grouped.values()].sort((a, b) => {
-    const sequenceDifference =
-      (b.cycle?.sequence ?? 0) - (a.cycle?.sequence ?? 0);
-    if (sequenceDifference !== 0) return sequenceDifference;
     return b.posts[0].published_at.localeCompare(a.posts[0].published_at);
   });
 }

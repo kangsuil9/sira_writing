@@ -29,7 +29,7 @@ export default async function PostPage({
       supabase
         .from("posts")
         .select(
-          "id,title,body,body_html,discussion_question,author_id,published_at,updated_at,profiles:profiles!posts_author_id_fkey(nickname),clubs(id,topic_sentence,status,cycles(sequence,starts_at,ends_at))",
+          "id,title,body,body_html,discussion_question,author_id,published_at,updated_at,profiles:profiles!posts_author_id_fkey(nickname),clubs(id,topic_sentence,status,starts_at,ends_at)",
         )
         .eq("id", postId)
         .single(),
@@ -49,13 +49,10 @@ export default async function PostPage({
     ? post.profiles[0]
     : post.profiles;
   const club = Array.isArray(post.clubs) ? post.clubs[0] : post.clubs;
-  const cycle = Array.isArray(club?.cycles)
-    ? club.cycles[0]
-    : club?.cycles;
   const open = isWritingOpen(
     club?.status ?? "",
-    cycle?.starts_at,
-    cycle?.ends_at,
+    club?.starts_at,
+    club?.ends_at,
   );
   const editable = post.author_id === user.id && open;
   const readByMe = (readRows ?? []).some((row) => row.user_id === user.id);
@@ -71,7 +68,7 @@ export default async function PostPage({
 
       <article className="shell article">
         <div className="article-topic">
-          {cycle?.sequence}기 · {club?.topic_sentence}
+          {club?.topic_sentence}
         </div>
         <h1>{post.title}</h1>
         <div className="article-byline">

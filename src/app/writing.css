@@ -136,13 +136,25 @@
 .proposal-hero { padding: 80px 0 54px; }
 .proposal-hero h1 { margin: 0 0 18px; font-size: clamp(20px, 3.5vw, 35px); line-height: 1.25; letter-spacing: -.035em; white-space: nowrap; }
 .proposal-hero p { color: #686a62; font-size: 18px; line-height: 1.8; }
-.proposal-hero button { margin-top: 18px; padding: 14px 20px; border: 0; border-radius: 9px; background: var(--ink); color: #fff; font-weight: 700; opacity: .45; }
+.proposal-hero > button { margin-top: 18px; padding: 14px 20px; border: 0; border-radius: 9px; background: var(--ink); color: #fff; font-weight: 700; opacity: .45; }
 .proposal-sections { display: grid; grid-template-columns: 1fr; gap: 16px; padding-bottom: 130px; }
 .proposal-sections article { padding: 30px; border-radius: 16px; background: var(--soft); }
 .proposal-sections article > span { color: var(--green); font-size: 14px; font-weight: 750; }
 .proposal-sections h2 { margin: 16px 0 10px; font-size: 24px; }
 .proposal-sections p { min-height: 54px; color: #696b63; line-height: 1.7; }
 .proposal-sections strong { display: block; margin-top: 26px; color: #85877f; font-size: 14px; }
+.proposal-form { display: grid; gap: 14px; max-width: 680px; margin-top: 30px; padding: 28px; border-radius: 16px; background: var(--soft); }
+.proposal-form label { display: grid; gap: 8px; font-weight: 700; }
+.proposal-form input, .proposal-form textarea { width: 100%; padding: 13px 14px; border: 0; border-radius: 9px; outline: 0; background: #fff; color: var(--ink); font: inherit; }
+.proposal-form textarea { line-height: 1.7; resize: vertical; }
+.proposal-form button { justify-self: start; padding: 13px 19px; border: 0; border-radius: 9px; background: var(--ink); color: #fff; font-weight: 700; cursor: pointer; }
+.proposal-form button:disabled { opacity: .5; }
+.my-proposal-list { display: grid; gap: 10px; margin-top: 22px; }
+.my-proposal { padding: 20px; border-radius: 11px; background: #fff; }
+.my-proposal > div { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.my-proposal > div span { flex: none; color: var(--green); font-size: 13px; font-weight: 750; }
+.proposal-sections .my-proposal p { min-height: 0; margin: 10px 0; }
+.my-proposal small { color: #85877f; }
 @media (max-width: 720px) { .bottom-navigation { bottom: 10px; width: calc(100% - 24px); } .proposal-hero { padding-top: 54px; } .proposal-hero h1 { font-size: clamp(18px, 5.5vw, 24px); } }
 .memo-launcher { position: fixed; right: max(16px, calc((100vw - 1320px) / 2)); bottom: 96px; z-index: 55; width: 62px; height: 62px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: #fff; box-shadow: 0 10px 28px rgba(28,31,25,.22); font-weight: 750; cursor: pointer; }
 .memo-launcher:hover { transform: translateY(-2px); }

@@ -23,7 +23,7 @@ export default async function WritePage({
   const [{ data: club }, draftResult] = await Promise.all([
     supabase
       .from("clubs")
-      .select("id,topic_sentence,status,cycles(starts_at,ends_at)")
+      .select("id,topic_sentence,status,starts_at,ends_at")
       .eq("id", clubId)
       .single(),
     requestedDraftId
@@ -39,8 +39,7 @@ export default async function WritePage({
 
   if (!club) notFound();
   if (requestedDraftId && !draftResult.data) notFound();
-  const cycle = Array.isArray(club.cycles) ? club.cycles[0] : club.cycles;
-  if (!isWritingOpen(club.status, cycle?.starts_at, cycle?.ends_at)) {
+  if (!isWritingOpen(club.status, club.starts_at, club.ends_at)) {
     redirect(`/clubs/${clubId}`);
   }
 

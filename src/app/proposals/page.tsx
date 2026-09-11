@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { proposalsEnabled } from "@/lib/features";
+import { ProposalForm } from "./proposal-form";
 
 export default async function ProposalsPage() {
   const supabase = await createClient();
@@ -7,6 +9,13 @@ export default async function ProposalsPage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  const { data: proposals } = await supabase
+    .from("clubs")
+    .select("id,topic_sentence,description,status,starts_at,ends_at,created_at")
+    .eq("origin_type", "PROPOSAL")
+    .eq("proposed_by", user.id)
+    .order("created_at", { ascending: false });
 
   return (
     <main>
@@ -17,28 +26,53 @@ export default async function ProposalsPage() {
           <br />
           함께 고민하고 써보고 싶은 주제를 제안해보세요.
         </p>
-        <button type="button" disabled>
-          주제 제안하기 · 준비 중
-        </button>
+        <ProposalForm enabled={proposalsEnabled} />
       </section>
 
       <section className="shell proposal-sections">
         <article>
-          <span>참여 모집</span>
-          <h2>다음 기수의 주제를 고르는 공간</h2>
-          <p>후보 주제가 공개되면 참여를 신청하거나 취소할 수 있어요.</p>
-          <strong>아직 참여 모집 중인 주제가 없어요.</strong>
+          <span>운영 방식</span>
+          <h2>승인되면 모두에게 열리는 글쓰기 클럽</h2>
+          <p>관리자가 제안을 확인하고 승인하면 정해진 기간 동안 모든 회원이 자유롭게 글을 쓸 수 있어요.</p>
+          <strong>참여 인원과 관계없이 클럽은 시작돼요.</strong>
         </article>
         <article>
           <span>내 제안</span>
-          <h2>내가 던진 질문의 다음 과정</h2>
-          <p>
-            제안한 주제가 모집 중인지, 클럽으로 확정됐는지 이곳에서
-            확인할 수 있어요.
-          </p>
-          <strong>주제 제안 기능을 준비하고 있어요.</strong>
+          <h2>내가 제안한 글쓰기 주제</h2>
+          {(proposals ?? []).length === 0 ? (
+            <strong>아직 제안한 주제가 없어요.</strong>
+          ) : (
+            <div className="my-proposal-list">
+              {(proposals ?? []).map((proposal) => (
+                <div className="my-proposal" key={proposal.id}>
+                  <div>
+                    <b>{proposal.topic_sentence}</b>
+                    <span>{proposalStatus(proposal.status)}</span>
+                  </div>
+                  <p>{proposal.description}</p>
+                  <small>{formatDate(proposal.starts_at)} – {formatDate(proposal.ends_at)}</small>
+                </div>
+              ))}
+            </div>
+          )}
         </article>
       </section>
     </main>
   );
+}
+
+function proposalStatus(status: string) {
+  if (status === "ACTIVE") return "승인";
+  if (status === "NOT_SELECTED") return "미승인";
+  if (status === "COMPLETED") return "종료";
+  return "검토 중";
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "Asia/Seoul",
+  }).format(new Date(value));
 }
