@@ -16,8 +16,9 @@ type Club = {
 type Post = {
   id: string;
   title: string;
-  discussion_question: string | null;
+  body: string;
   published_at: string;
+  post_continuations: Array<{ count: number }> | null;
   clubs: Club | Club[] | null;
 };
 
@@ -43,7 +44,7 @@ export default async function MyPage() {
     supabase
       .from("posts")
       .select(
-        "id,title,discussion_question,published_at,clubs(id,category,topic_sentence,status,starts_at,ends_at)",
+        "id,title,body,published_at,post_continuations(count),clubs(id,category,topic_sentence,status,starts_at,ends_at)",
       )
       .eq("author_id", user.id)
       .order("published_at", { ascending: false }),
@@ -118,15 +119,14 @@ export default async function MyPage() {
                   >
                     <div>
                       <h3>{post.title}</h3>
-                      {post.discussion_question && (
-                        <p>
-                          함께 나누고 싶은 질문 · {post.discussion_question}
-                        </p>
-                      )}
+                      <p className="my-post-preview">{post.body}</p>
                     </div>
-                    <time dateTime={post.published_at}>
-                      {formatDate(post.published_at)}
-                    </time>
+                    <div className="my-post-meta">
+                      <time dateTime={post.published_at}>
+                        {formatDate(post.published_at)}
+                      </time>
+                      <span>이어쓰기 {continuationCount(post)}개</span>
+                    </div>
                   </Link>
                 ))}
               </div>
@@ -136,6 +136,10 @@ export default async function MyPage() {
       </section>
     </main>
   );
+}
+
+function continuationCount(post: Post) {
+  return post.post_continuations?.[0]?.count ?? 0;
 }
 
 function groupPosts(posts: Post[]) {

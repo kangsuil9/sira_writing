@@ -12,7 +12,9 @@
 .home-club-card p { max-width: 900px; margin: 0; color: #686a62; line-height: 1.7; }
 .card-foot { display: grid; justify-items: end; gap: 8px; color: #77796f; font-size: 14px; white-space: nowrap; }
 .club-hero { padding: 64px 0 52px; }
-.club-hero h1 { max-width: 850px; margin: 15px 0; font-size: clamp(34px, 6vw, 58px); line-height: 1.2; letter-spacing: -.04em; }
+.header-back-link { margin-left: auto; }
+.club-hero h1 { max-width: 850px; margin: 0 0 15px; font-size: clamp(34px, 6vw, 58px); line-height: 1.2; letter-spacing: -.04em; }
+.club-hero .club-meta { margin-bottom: 12px; }
 .club-hero > p { max-width: 760px; color: #60625b; font-size: 18px; line-height: 1.8; }
 .period { margin: 22px 0; color: #77796f; }
 .primary-link { display: inline-block; margin-top: 12px; padding: 14px 22px; background: var(--ink); color: white; font-weight: 700; }
@@ -84,8 +86,10 @@
 .my-post-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; padding: 24px; border-radius: 12px; background: var(--soft); }
 .my-post-card h3 { margin: 0; font-size: 21px; line-height: 1.45; }
 .my-post-card p { margin: 9px 0 0; color: #74766e; line-height: 1.6; }
-.my-post-card time { flex: none; color: #85877f; font-size: 14px; }
-@media (max-width: 720px) { .my-hero { padding-top: 48px; } .my-club-head { align-items: flex-start; } .my-post-card { display: grid; gap: 12px; } }
+.my-post-preview { display: -webkit-box; overflow: hidden; white-space: pre-line; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.my-post-meta { display: grid; flex: none; justify-items: end; gap: 8px; color: #85877f; font-size: 14px; white-space: nowrap; }
+.my-post-meta time { color: inherit; }
+@media (max-width: 720px) { .my-hero { padding-top: 48px; } .my-club-head { align-items: flex-start; } .my-post-card { display: grid; gap: 12px; } .my-post-meta { display: flex; justify-content: space-between; width: 100%; } }
 .hero { padding-top: 64px; }
 .hero h1 { max-width: 900px; font-size: clamp(28px, 3.5vw, 38px); line-height: 1.3; letter-spacing: -.035em; }
 .editor-head { max-width: 940px; padding-top: 44px; }

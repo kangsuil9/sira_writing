@@ -47,17 +47,14 @@ export default async function ClubPage({
   return (
     <main>
       <header className="shell header">
-        <Link className="brand" href="/">
-          시라
-        </Link>
-        <Link href="/">클럽 목록</Link>
+        <Link className="header-back-link" href="/">클럽 목록</Link>
       </header>
 
       <section className="shell club-hero">
+        <h1>{club.topic_sentence}</h1>
         <div className="club-meta">
           {club.category} · {active ? "활동 중" : "종료"}
         </div>
-        <h1>{club.topic_sentence}</h1>
         <p>{club.description}</p>
         <div className="period">
           {formatDate(club.starts_at)} – {formatDate(club.ends_at)}
@@ -118,7 +115,7 @@ export default async function ClubPage({
 
                   <div className="post-card-foot">
                     <span aria-hidden="true">○</span>
-                    <span>댓글 {continuationCount}개</span>
+                    <span>이어쓰기 {continuationCount}개</span>
                   </div>
                 </Link>
               );
