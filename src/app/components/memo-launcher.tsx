@@ -28,7 +28,7 @@ export function MemoLauncher() {
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        메모
+        + 글감
       </button>
       {open && <QuickMemoDialog onClose={() => setOpen(false)} />}
     </>
@@ -61,7 +61,7 @@ function QuickMemoDialog({ onClose }: { onClose: () => void }) {
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="memo-dialog-head">
-          <h2 id="quick-memo-title">떠오른 생각 붙잡기</h2>
+          <h2 id="quick-memo-title">새 글감</h2>
           <button type="button" aria-label="닫기" onClick={onClose}>×</button>
         </div>
         <form action={action} className="memo-form">
@@ -75,13 +75,13 @@ function QuickMemoDialog({ onClose }: { onClose: () => void }) {
             name="content"
             rows={8}
             maxLength={10000}
-            placeholder="나중에 글이 될 생각을 적어보세요."
+            placeholder="떠오른 생각을 자유롭게 적어보세요."
             required
           />
           {state.error && <p className="error">{state.error}</p>}
           <div className="memo-form-actions">
             <button type="button" className="secondary-action" onClick={onClose}>취소</button>
-            <button type="submit" disabled={pending}>{pending ? "저장 중…" : "저장"}</button>
+            <button type="submit" disabled={pending}>{pending ? "저장 중…" : "글감 저장"}</button>
           </div>
         </form>
       </section>

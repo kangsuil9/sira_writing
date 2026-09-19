@@ -44,7 +44,7 @@ export async function createWritingNote(
     title,
     content,
   });
-  if (error) return { error: "메모를 저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
+  if (error) return { error: "글감을 저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
 
   revalidatePath("/my");
   revalidatePath("/my/notes");
@@ -66,7 +66,7 @@ export async function updateWritingNote(
     .update({ title, content, updated_at: new Date().toISOString() })
     .eq("id", noteId)
     .eq("author_id", user.id);
-  if (error) return { error: "메모를 수정하지 못했어요." };
+  if (error) return { error: "글감을 수정하지 못했어요." };
 
   revalidatePath("/my/notes");
   return { saved: true };

@@ -34,7 +34,7 @@ export function NoteItem({
       ) : (
         <>
           <div className="note-card-head">
-            <h2>{title || "제목 없는 메모"}</h2>
+            <h2>{title || "제목 없는 글감"}</h2>
             <time dateTime={updatedAt}>{formatDate(updatedAt)}</time>
           </div>
           <p>{content}</p>
@@ -43,7 +43,7 @@ export function NoteItem({
             <form
               action={deleteWritingNote}
               onSubmit={(event) => {
-                if (!window.confirm("이 메모를 삭제할까요?")) event.preventDefault();
+                if (!window.confirm("이 글감을 삭제할까요?")) event.preventDefault();
               }}
             >
               <input type="hidden" name="noteId" value={id} />

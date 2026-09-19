@@ -35,14 +35,14 @@ export default async function WritingNotesPage() {
     <main>
       <section className="shell notes-head">
         <Link href="/my">← 나의 글</Link>
-        <h1>나의 글 소재</h1>
+        <h1>나의 글감</h1>
         <p>아직 글이 되지 않은 생각을 모아두는 곳이에요.</p>
       </section>
       <section className="shell notes-list">
         {(notes ?? []).length === 0 ? (
           <div className="empty notes-empty">
-            <strong>아직 저장한 글 소재가 없어요.</strong>
-            <p>오른쪽 아래의 메모 버튼으로 떠오른 생각을 붙잡아보세요.</p>
+            <strong>아직 저장한 글감이 없어요.</strong>
+            <p>오른쪽 아래의 + 글감 버튼으로 떠오른 생각을 남겨보세요.</p>
           </div>
         ) : (
           (notes as WritingNote[]).map((note) => (

@@ -72,7 +72,7 @@ export default async function MyPage() {
             임시저장 글 {draftCount ?? 0}개
           </Link>
           <Link className="draft-list-link" href="/my/notes">
-            나의 글 소재 {noteCount ?? 0}개
+            나의 글감 {noteCount ?? 0}개
           </Link>
         </div>
         <div className="my-account-actions">
