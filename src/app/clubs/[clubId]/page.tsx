@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
 
 export default async function ClubPage({
@@ -10,32 +10,35 @@ export default async function ClubPage({
 }) {
   const { clubId } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: club }, { data: posts }] =
-    await Promise.all([
-      supabase.from("profiles").select("role").eq("id", user.id).single(),
-      supabase
-        .from("clubs")
-        .select(
-          "id,category,topic_sentence,description,status,starts_at,ends_at",
-        )
-        .eq("id", clubId)
-        .single(),
-      supabase
-        .from("posts")
-        .select(
-          "id,title,body,published_at,profiles:profiles!posts_author_id_fkey(nickname,avatar_url),post_continuations(count)",
-        )
-        .eq("club_id", clubId)
-        .order("published_at", { ascending: false }),
-    ]);
+  const [{ data: club }, { data: posts }] = await Promise.all([
+    supabase
+      .from("clubs")
+      .select(
+        "id,category,topic_sentence,description,status,starts_at,ends_at",
+      )
+      .eq("id", clubId)
+      .single(),
+    supabase
+      .from("posts")
+      .select(
+        "id,title,body,published_at,profiles:profiles!posts_author_id_fkey(nickname,avatar_url),post_continuations(count)",
+      )
+      .eq("club_id", clubId)
+      .order("published_at", { ascending: false }),
+  ]);
 
-  if (!club || (club.status === "DRAFT" && profile?.role !== "ADMIN")) {
-    notFound();
+  if (!club) notFound();
+
+  if (club.status === "DRAFT") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    if (profile?.role !== "ADMIN") notFound();
   }
 
   const active = isWritingOpen(

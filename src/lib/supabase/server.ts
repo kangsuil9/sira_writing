@@ -7,3 +7,16 @@ export async function createClient() {
     setAll(cookiesToSet) { try { cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options)); } catch {} },
   }});
 }
+
+export async function getCurrentUser(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+) {
+  const { data, error } = await supabase.auth.getClaims();
+  const userId = data?.claims?.sub;
+
+  if (error || typeof userId !== "string" || userId.length === 0) {
+    return null;
+  }
+
+  return { id: userId };
+}

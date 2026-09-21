@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { NoteItem } from "./note-item";
 
 type WritingNote = {
@@ -12,9 +12,7 @@ type WritingNote = {
 
 export default async function WritingNotesPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
   const [{ data: profile }, { data: notes }] = await Promise.all([

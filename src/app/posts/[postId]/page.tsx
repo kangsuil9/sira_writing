@@ -8,7 +8,7 @@ import {
   deletePost,
   toggleRead,
 } from "@/app/writing-actions";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
 import { sanitizePostHtml } from "@/lib/post-content";
 
@@ -19,9 +19,7 @@ export default async function PostPage({
 }) {
   const { postId } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
   const [{ data: post }, { data: readRows }, { data: continuations }] =

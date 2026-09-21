@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { proposalsEnabled } from "@/lib/features";
 
 export type ProposalState = { error?: string; saved?: boolean };
@@ -14,9 +14,7 @@ export async function createClubProposal(
   if (!proposalsEnabled) return { error: "주제 제안 기능은 아직 준비 중이에요." };
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
   const title = String(formData.get("title") ?? "").trim();

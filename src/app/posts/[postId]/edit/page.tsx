@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { PostForm } from "@/app/components/post-form";
 import { isWritingOpen } from "@/lib/clubs";
 export default async function EditPostPage({ params }: { params: Promise<{ postId: string }> }) {
   const { postId } = await params;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect("/login");
+  const user = await getCurrentUser(supabase); if (!user) redirect("/login");
   const { data: post } = await supabase.from("posts").select("id,title,body,body_html,discussion_question,author_id,club_id,clubs(status,topic_sentence,starts_at,ends_at)").eq("id", postId).single();
   if (!post) notFound();
   const club = Array.isArray(post.clubs) ? post.clubs[0] : post.clubs;

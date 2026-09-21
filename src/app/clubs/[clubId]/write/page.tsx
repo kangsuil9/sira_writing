@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { PostForm } from "@/app/components/post-form";
 import { isWritingOpen } from "@/lib/clubs";
 
@@ -15,9 +15,7 @@ export default async function WritePage({
   const { clubId } = await params;
   const { draft: requestedDraftId } = await searchParams;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
   const [{ data: club }, draftResult] = await Promise.all([

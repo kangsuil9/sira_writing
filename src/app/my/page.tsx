@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
 import { signOut } from "@/app/actions";
 
@@ -30,15 +30,15 @@ type ClubGroup = {
 
 export default async function MyPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: posts }, { count: draftCount }, { count: noteCount }] = await Promise.all([
+  const [{ data: profile }, { data: posts }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("nickname,onboarding_completed,role")
+      .select(
+        "nickname,onboarding_completed,role,post_drafts(count),writing_notes(count)",
+      )
       .eq("id", user.id)
       .single(),
     supabase
@@ -48,19 +48,13 @@ export default async function MyPage() {
       )
       .eq("author_id", user.id)
       .order("published_at", { ascending: false }),
-    supabase
-      .from("post_drafts")
-      .select("id", { count: "exact", head: true })
-      .eq("author_id", user.id),
-    supabase
-      .from("writing_notes")
-      .select("id", { count: "exact", head: true })
-      .eq("author_id", user.id),
   ]);
 
   if (!profile?.onboarding_completed) redirect("/onboarding");
 
   const groups = groupPosts((posts ?? []) as Post[]);
+  const draftCount = relationCount(profile.post_drafts);
+  const noteCount = relationCount(profile.writing_notes);
 
   return (
     <main>
@@ -136,6 +130,10 @@ export default async function MyPage() {
       </section>
     </main>
   );
+}
+
+function relationCount(value: Array<{ count: number }> | null) {
+  return value?.[0]?.count ?? 0;
 }
 
 function continuationCount(post: Post) {

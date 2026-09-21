@@ -10,7 +10,8 @@ export async function updateSession(request: NextRequest) {
       cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
     },
   }});
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getClaims();
+  const user = !error && data?.claims?.sub ? { id: data.claims.sub } : null;
   const path = request.nextUrl.pathname;
   const publicPath = path === "/login" || path.startsWith("/auth/");
   if (!user && !publicPath) { const url = request.nextUrl.clone(); url.pathname = "/login"; return NextResponse.redirect(url); }
