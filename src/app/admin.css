@@ -39,9 +39,15 @@
 .club-edit-form label { display: grid; gap: 7px; font-size: 14px; font-weight: 700; }
 .club-edit-form input, .club-edit-form textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; }
 .club-edit-form button { justify-self: start; padding: 11px 16px; border: 0; background: var(--ink); color: #fff; font-weight: 700; cursor: pointer; }
-.club-image-field > label { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
-.club-image-field > label span { padding: 8px 12px; border-radius: 8px; background: #ece9e1; color: var(--ink); font-size: 13px; }
-.club-image-field input[type="file"] { display: none; }
+.club-image-field { display: grid; gap: 9px; }
+.club-image-field > strong { font-size: 14px; }
+.club-image-picker { display: flex !important; align-items: center; justify-content: center; flex-direction: column; gap: 6px !important; min-height: 112px; padding: 20px !important; border: 1px dashed #b9b8af !important; border-radius: 12px; background: #f7f6f1; text-align: center; cursor: pointer; }
+.club-image-picker:hover { border-color: var(--green) !important; background: #f0f3ed; }
+.club-image-picker span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 23px; font-weight: 400; line-height: 1; }
+.club-image-picker b { font-size: 14px; }
+.club-image-picker small { color: #77796f; font-size: 12px; font-weight: 400; }
+.club-image-file-input { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+.club-image-field.prominent { margin: 22px 0; padding: 20px; border-radius: 14px; background: #f2f0e9; }
 .club-image-field img { display: block; width: 100%; max-width: 480px; aspect-ratio: 2 / 1; margin-top: 10px; border-radius: 10px; object-fit: cover; }
 .admin-home-grid { padding-bottom: 110px; }
 .home-content-form { border-radius: 16px; }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useActionState, useState } from "react";
+import { ChangeEvent, useActionState, useId, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { createClub, reviewClubProposal, updateClubDetails, updateClubStatus, type AdminActionState } from "../actions";
 
@@ -15,7 +15,7 @@ export function ClubForm() {
       <label>관심 분야<input name="category" maxLength={40} placeholder="예: 마음 건강" required /></label>
       <label>클럽 주제 한 문장<input name="topicSentence" minLength={5} maxLength={200} placeholder="예: 불안한 날의 나에게 편지를 써보세요." required /></label>
       <label>설명<textarea name="description" minLength={20} maxLength={1000} rows={5} placeholder="이 주제로 어떤 글을 쓰면 좋을지 2~3문장으로 설명해 주세요." required /></label>
-      <ClubImageField image={image} />
+      <ClubImageField image={image} prominent />
       <div className="form-row"><label>시작일<input name="startsAt" type="date" required /></label><label>종료일<input name="endsAt" type="date" required /></label></div>
       <label>개설 상태<select name="status" defaultValue="ACTIVE"><option value="ACTIVE">공개하기</option><option value="DRAFT">초안으로 저장</option></select></label>
       <p className="form-hint">모든 로그인 회원이 별도 참여 신청 없이 읽고 글을 쓸 수 있어요.</p>
@@ -70,14 +70,30 @@ function Feedback({ state }: { state: AdminActionState }) {
 
 type ClubImageState = ReturnType<typeof useClubImage>;
 
-function ClubImageField({ image }: { image: ClubImageState }) {
+function ClubImageField({
+  image,
+  prominent = false,
+}: {
+  image: ClubImageState;
+  prominent?: boolean;
+}) {
+  const inputId = useId();
   return (
-    <div className="club-image-field">
+    <div className={prominent ? "club-image-field prominent" : "club-image-field"}>
       <input type="hidden" name="coverImageUrl" value={image.imageUrl} />
-      <label>
-        클럽 대표 사진 <span>선택</span>
-        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={image.upload} />
+      <strong>클럽 대표 사진</strong>
+      <label className="club-image-picker" htmlFor={inputId}>
+        <span aria-hidden="true">＋</span>
+        <b>{image.previewUrl ? "다른 사진 선택" : "대표 사진 선택"}</b>
+        <small>클럽 카드와 상세 화면에 표시됩니다.</small>
       </label>
+      <input
+        id={inputId}
+        className="club-image-file-input"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={image.upload}
+      />
       <p className="form-hint">JPG, PNG, WebP · 최대 8MB</p>
       {image.previewUrl && (
         // eslint-disable-next-line @next/next/no-img-element
