@@ -24,7 +24,7 @@ export function ProfileForm({ userId, nickname, avatarUrl }: Props) {
 
   async function checkNickname() {
     const value = nextNickname.trim();
-    if (!/^[가-힣a-zA-Z0-9_]{2,20}$/.test(value)) {
+    if (!/^[가-힣a-zA-Z0-9_]{1,20}$/.test(value)) {
       setNicknameStatus("invalid");
       return;
     }
@@ -112,7 +112,7 @@ export function ProfileForm({ userId, nickname, avatarUrl }: Props) {
             id="profile-nickname"
             name="nickname"
             value={nextNickname}
-            minLength={2}
+            minLength={1}
             maxLength={20}
             required
             onChange={(event) => {
@@ -156,10 +156,10 @@ function NicknameMessage({
     return <p className="nickname-message error">이미 사용 중인 닉네임이에요.</p>;
   }
   if (status === "invalid") {
-    return <p className="nickname-message error">2~20자의 한글, 영문, 숫자, 밑줄만 사용할 수 있어요.</p>;
+    return <p className="nickname-message error">1~20자의 한글, 영문, 숫자, 밑줄만 사용할 수 있어요.</p>;
   }
   if (status === "unchecked") {
     return <p className="nickname-message">변경한 닉네임의 중복을 확인해 주세요.</p>;
   }
-  return <p className="nickname-message">2~20자의 한글, 영문, 숫자, 밑줄을 사용할 수 있어요.</p>;
+  return <p className="nickname-message">1~20자의 한글, 영문, 숫자, 밑줄을 사용할 수 있어요.</p>;
 }

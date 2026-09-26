@@ -8,7 +8,7 @@ create type public.access_scope as enum ('AUTHENTICATED', 'MEMBERS', 'CLOSED');
 
 create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  nickname text unique check (nickname is null or (char_length(nickname) between 2 and 20 and nickname ~ '^[가-힣a-zA-Z0-9_]+$')),
+  nickname text unique check (nickname is null or (char_length(nickname) between 1 and 20 and nickname ~ '^[가-힣a-zA-Z0-9_]+$')),
   role public.user_role not null default 'USER',
   onboarding_completed boolean not null default false,
   created_at timestamptz not null default now(),
