@@ -16,7 +16,8 @@ export async function GET(request: Request) {
       await supabase
         .from("profiles")
         .update({ avatar_url: avatarUrl })
-        .eq("id", user.id);
+        .eq("id", user.id)
+        .is("avatar_url", null);
     }
     if (!error) return NextResponse.redirect(new URL(next.startsWith("/") ? next : "/", url.origin));
   }

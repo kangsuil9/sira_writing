@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { isWritingOpen } from "@/lib/clubs";
-import { signOut } from "@/app/actions";
 
 type Club = {
   id: string;
@@ -37,7 +36,7 @@ export default async function MyPage() {
     supabase
       .from("profiles")
       .select(
-        "nickname,onboarding_completed,role,post_drafts(count),writing_notes(count)",
+        "nickname,avatar_url,onboarding_completed,role,post_drafts(count),writing_notes(count)",
       )
       .eq("id", user.id)
       .single(),
@@ -59,7 +58,16 @@ export default async function MyPage() {
   return (
     <main>
       <section className="shell my-hero">
-        <h1>{profile.nickname}님의 글</h1>
+        <div className="my-profile-heading">
+          <ProfileImage
+            avatarUrl={profile.avatar_url}
+            nickname={profile.nickname}
+          />
+          <h1>{profile.nickname}</h1>
+          <Link className="profile-edit-link" href="/my/profile">
+            프로필 변경
+          </Link>
+        </div>
         <div className="my-summary">
           <strong>내가 쓴 글 {posts?.length ?? 0}편</strong>
           <Link className="draft-list-link" href="/my/drafts">
@@ -69,14 +77,11 @@ export default async function MyPage() {
             나의 글감 {noteCount ?? 0}개
           </Link>
         </div>
-        <div className="my-account-actions">
-          {profile.role === "ADMIN" && (
+        {profile.role === "ADMIN" && (
+          <div className="my-account-actions">
             <Link href="/admin/clubs">클럽 관리</Link>
-          )}
-          <form action={signOut}>
-            <button type="submit">로그아웃</button>
-          </form>
-        </div>
+          </div>
+        )}
       </section>
 
       <section className="shell my-writing">
@@ -129,6 +134,26 @@ export default async function MyPage() {
         )}
       </section>
     </main>
+  );
+}
+
+function ProfileImage({
+  avatarUrl,
+  nickname,
+}: {
+  avatarUrl: string | null;
+  nickname: string;
+}) {
+  if (avatarUrl) {
+    // Profile images can be served from Kakao or Supabase Storage host names.
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img className="my-profile-image" src={avatarUrl} alt="" />;
+  }
+
+  return (
+    <span className="my-profile-image my-profile-fallback" aria-hidden="true">
+      {nickname.slice(0, 1)}
+    </span>
   );
 }
 
