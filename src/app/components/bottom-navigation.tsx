@@ -20,7 +20,9 @@ export function BottomNavigation() {
       label: "홈",
       active:
         pathname === "/" ||
+        pathname === "/clubs" ||
         pathname.startsWith("/clubs/") ||
+        pathname === "/posts" ||
         pathname.startsWith("/posts/"),
       icon: <HomeIcon />,
     },

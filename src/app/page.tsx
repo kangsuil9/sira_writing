@@ -69,18 +69,27 @@ export default async function HomePage() {
           <h1>
             누구나 읽는다.
             <br />
-            하지만 아무나 못쓴다.
+            하지만 아무나 안쓴다.
           </h1>
+          <p>
+            내 속에 나를 꺼내 나를 완성해보세요. 나다움과 나만의
+            특별함을 보여주세요.
+          </p>
         </div>
-        <div className="home-hero-visual" aria-hidden="true">
-          <span className="visual-circle" />
-          <span className="visual-line visual-line-one" />
-          <span className="visual-line visual-line-two" />
-        </div>
+        <div
+          className="home-hero-visual"
+          role="img"
+          aria-label="햇빛이 드는 창가 책상에서 글을 쓰는 사람의 뒷모습"
+        />
       </section>
 
       <section className="shell home-panel active-club-panel">
-        <SectionHeading title="활동중인 글쓰기 클럽" count={activeClubs.length} />
+        <SectionHeading
+          title="활동중인 글쓰기 클럽"
+          count={activeClubs.length}
+          actionHref="/clubs?scope=active"
+          actionLabel="전체보기"
+        />
         {activeClubs.length === 0 ? (
           <HomeEmpty
             title="현재 활동 중인 클럽이 없어요."
@@ -88,7 +97,7 @@ export default async function HomePage() {
           />
         ) : (
           <div className="active-club-list">
-            {activeClubs.map((club) => (
+            {activeClubs.slice(0, 3).map((club) => (
               <ClubCard club={club} active key={club.id} />
             ))}
           </div>
@@ -98,7 +107,12 @@ export default async function HomePage() {
       {latestPost && <LatestPostCard post={latestPost} />}
 
       <section className="shell home-panel past-club-panel">
-        <SectionHeading title="지난 글쓰기 클럽" count={pastClubs.length} />
+        <SectionHeading
+          title="지난 글쓰기 클럽"
+          count={pastClubs.length}
+          actionHref="/clubs?scope=past"
+          actionLabel="전체보기"
+        />
         {pastClubs.length === 0 ? (
           <HomeEmpty
             title="아직 지난 클럽이 없어요."
@@ -106,7 +120,7 @@ export default async function HomePage() {
           />
         ) : (
           <div className="past-club-scroll">
-            {pastClubs.map((club) => (
+            {pastClubs.slice(0, 3).map((club) => (
               <Link
                 className="past-club-card"
                 href={`/clubs/${club.id}`}
@@ -149,11 +163,26 @@ type LatestPost = {
   post_continuations: Array<{ count: number }> | null;
 };
 
-function SectionHeading({ title, count }: { title: string; count: number }) {
+function SectionHeading({
+  title,
+  count,
+  actionHref,
+  actionLabel,
+}: {
+  title: string;
+  count?: number;
+  actionHref?: string;
+  actionLabel?: string;
+}) {
   return (
     <div className="home-section-heading">
       <h2>{title}</h2>
-      <span>{count}개</span>
+      <div className="home-section-actions">
+        {typeof count === "number" && <span>{count}개</span>}
+        {actionHref && actionLabel && (
+          <Link href={actionHref}>{actionLabel} <span aria-hidden="true">›</span></Link>
+        )}
+      </div>
     </div>
   );
 }
@@ -186,9 +215,11 @@ function LatestPostCard({ post }: { post: LatestPost }) {
 
   return (
     <section className="shell home-panel latest-post-panel">
-      <div className="home-section-heading">
-        <h2>오늘의 최신 글</h2>
-      </div>
+      <SectionHeading
+        title="오늘의 최신 글"
+        actionHref="/posts"
+        actionLabel="더보기"
+      />
       <Link className="latest-post-card" href={`/posts/${post.id}`}>
         <div
           className="latest-post-image club-image-placeholder"
