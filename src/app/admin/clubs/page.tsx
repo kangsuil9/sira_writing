@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
-import { ClubForm, ClubStatusForm, ProposalReviewForm } from "./admin-forms";
+import { ClubEditForm, ClubForm, ClubStatusForm, ProposalReviewForm } from "./admin-forms";
 
 export default async function AdminClubsPage() {
   const supabase = await createClient();
@@ -12,7 +12,7 @@ export default async function AdminClubsPage() {
 
   const { data: clubs } = await supabase
     .from("clubs")
-    .select("id,category,topic_sentence,description,status,origin_type,starts_at,ends_at,created_at,profiles:profiles!clubs_proposed_by_fkey(nickname)")
+    .select("id,category,topic_sentence,description,cover_image_url,status,origin_type,starts_at,ends_at,created_at,profiles:profiles!clubs_proposed_by_fkey(nickname)")
     .order("created_at", { ascending: false });
   const proposals = (clubs ?? []).filter((club) => club.origin_type === "PROPOSAL" && club.status === "DRAFT");
   const managedClubs = (clubs ?? []).filter((club) => !(club.origin_type === "PROPOSAL" && club.status === "DRAFT"));
@@ -54,6 +54,7 @@ export default async function AdminClubsPage() {
                   <div><span>{club.category} · {club.origin_type === "PROPOSAL" ? "회원 제안" : "관리자 개설"}</span><span className={!ended && club.status === "ACTIVE" ? "status active" : "status"}>{label}</span></div>
                   <h3>{club.topic_sentence}</h3><p>{club.description}</p>
                   <p className="admin-period">{formatDate(club.starts_at)} – {formatDate(club.ends_at)}</p>
+                  {club.status !== "NOT_SELECTED" && <ClubEditForm club={club} locked={ended} />}
                   {club.status !== "NOT_SELECTED" && <ClubStatusForm clubId={club.id} status={ended ? "COMPLETED" : club.status} locked={ended} />}
                 </article>
               );

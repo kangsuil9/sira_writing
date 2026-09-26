@@ -33,6 +33,16 @@
 .proposal-review-form button { padding: 9px 14px; border: 0; background: var(--ink); color: #fff; cursor: pointer; }
 .proposal-review-form .reject-action { background: #eeeae3; color: #8b3b31; }
 .proposal-review-form span { margin-left: 8px; }
+.club-edit-panel { margin-top: 22px; padding: 18px; border-radius: 12px; background: #f5f3ed; }
+.club-edit-panel summary { font-weight: 750; cursor: pointer; }
+.club-edit-form { display: grid; gap: 14px; padding-top: 18px; }
+.club-edit-form label { display: grid; gap: 7px; font-size: 14px; font-weight: 700; }
+.club-edit-form input, .club-edit-form textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; }
+.club-edit-form button { justify-self: start; padding: 11px 16px; border: 0; background: var(--ink); color: #fff; font-weight: 700; cursor: pointer; }
+.club-image-field > label { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.club-image-field > label span { padding: 8px 12px; border-radius: 8px; background: #ece9e1; color: var(--ink); font-size: 13px; }
+.club-image-field input[type="file"] { display: none; }
+.club-image-field img { display: block; width: 100%; max-width: 480px; aspect-ratio: 2 / 1; margin-top: 10px; border-radius: 10px; object-fit: cover; }
 .admin-home-grid { padding-bottom: 110px; }
 .home-content-form { border-radius: 16px; }
 .home-content-preview { display: block; width: 100%; aspect-ratio: 2 / 1; margin: 12px 0 22px; border-radius: 12px; object-fit: cover; }

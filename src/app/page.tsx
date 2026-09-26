@@ -23,7 +23,7 @@ export default async function HomePage() {
       supabase
         .from("clubs")
         .select(
-          "id,category,topic_sentence,description,status,starts_at,ends_at,posts(count)",
+          "id,category,topic_sentence,description,cover_image_url,status,starts_at,ends_at,posts(count)",
         )
         .in("status", ["ACTIVE", "COMPLETED"])
         .order("created_at", { ascending: false }),
@@ -139,7 +139,11 @@ export default async function HomePage() {
                 href={`/clubs/${club.id}`}
                 key={club.id}
               >
-                <div className="club-image-placeholder" aria-hidden="true" />
+                <div
+                  className="club-cover-image"
+                  aria-hidden="true"
+                  style={{ backgroundImage: coverImage(club.cover_image_url) }}
+                />
                 <div>
                   <span>{club.category}</span>
                   <h3>{club.topic_sentence}</h3>
@@ -159,6 +163,7 @@ type PreparedClub = {
   category: string;
   topic_sentence: string;
   description: string;
+  cover_image_url: string | null;
   starts_at: string;
   ends_at: string;
   postCount: number;
@@ -204,8 +209,9 @@ function ClubCard({ club, active }: { club: PreparedClub; active?: boolean }) {
   return (
     <Link className="active-club-card" href={`/clubs/${club.id}`}>
       <div
-        className="active-club-image club-image-placeholder"
+        className="active-club-image club-cover-image"
         aria-hidden="true"
+        style={{ backgroundImage: coverImage(club.cover_image_url) }}
       >
         {active && <span>진행중</span>}
       </div>
@@ -310,4 +316,12 @@ function formatDate(value: string) {
     day: "numeric",
     timeZone: "Asia/Seoul",
   }).format(new Date(value));
+}
+
+function coverImage(value?: string | null) {
+  const url = (value || "/images/club-cover-default-v1.png").replace(
+    /["\\\n\r]/g,
+    "",
+  );
+  return `url("${url}")`;
 }

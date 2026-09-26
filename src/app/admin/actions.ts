@@ -25,6 +25,7 @@ function clubValues(formData: FormData) {
     category: String(formData.get("category") ?? "").trim(),
     topicSentence: String(formData.get("topicSentence") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),
+    coverImageUrl: String(formData.get("coverImageUrl") ?? "").trim(),
     startsAt: String(formData.get("startsAt") ?? ""),
     endsAt: String(formData.get("endsAt") ?? ""),
   };
@@ -59,6 +60,7 @@ export async function createClub(_: AdminActionState, formData: FormData): Promi
     write_scope: "AUTHENTICATED",
     minimum_members: 1,
     created_by: auth.user.id,
+    cover_image_url: values.coverImageUrl || null,
   });
   if (error) return { error: "클럽을 개설하지 못했어요." };
   revalidatePath("/");
@@ -81,6 +83,54 @@ export async function updateClubStatus(_: AdminActionState, formData: FormData):
   if (error) return { error: "클럽 상태를 변경하지 못했어요." };
   revalidateClubPaths(clubId);
   return { success: "상태를 변경했어요." };
+}
+
+export async function updateClubDetails(
+  _: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  const auth = await requireAdmin();
+  if ("error" in auth) return { error: auth.error };
+
+  const clubId = String(formData.get("clubId") ?? "");
+  const category = String(formData.get("category") ?? "").trim();
+  const topicSentence = String(formData.get("topicSentence") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const coverImageUrl = String(formData.get("coverImageUrl") ?? "").trim();
+  const validationError = validateClub({
+    category,
+    topicSentence,
+    description,
+    coverImageUrl,
+    startsAt: "2000-01-01",
+    endsAt: "2000-01-02",
+  });
+  if (validationError) return { error: validationError };
+
+  const { data: club } = await auth.supabase
+    .from("clubs")
+    .select("status,ends_at")
+    .eq("id", clubId)
+    .single();
+  if (!club) return { error: "클럽을 찾지 못했어요." };
+  if (club.status === "COMPLETED" || new Date(club.ends_at) < new Date()) {
+    return { error: "종료된 클럽은 수정할 수 없어요." };
+  }
+
+  const { error } = await auth.supabase
+    .from("clubs")
+    .update({
+      category,
+      topic_sentence: topicSentence,
+      description,
+      cover_image_url: coverImageUrl || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", clubId);
+  if (error) return { error: "클럽 정보를 변경하지 못했어요." };
+
+  revalidateClubPaths(clubId);
+  return { success: "클럽 정보를 변경했어요." };
 }
 
 export async function reviewClubProposal(_: AdminActionState, formData: FormData): Promise<AdminActionState> {

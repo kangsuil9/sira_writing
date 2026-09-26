@@ -17,7 +17,7 @@ export default async function ClubPage({
     supabase
       .from("clubs")
       .select(
-        "id,category,topic_sentence,description,status,starts_at,ends_at",
+        "id,category,topic_sentence,description,cover_image_url,status,starts_at,ends_at",
       )
       .eq("id", clubId)
       .single(),
@@ -54,6 +54,12 @@ export default async function ClubPage({
       </header>
 
       <section className="shell club-hero">
+        <div
+          className="club-detail-cover"
+          role="img"
+          aria-label={`${club.topic_sentence} 클럽 대표 사진`}
+          style={{ backgroundImage: coverImage(club.cover_image_url) }}
+        />
         <h1>{club.topic_sentence}</h1>
         <div className="club-meta">
           {club.category} · {active ? "활동 중" : "종료"}
@@ -159,4 +165,12 @@ function formatDate(value?: string) {
         timeZone: "Asia/Seoul",
       }).format(new Date(value))
     : "";
+}
+
+function coverImage(value?: string | null) {
+  const url = (value || "/images/club-cover-default-v1.png").replace(
+    /["\\\n\r]/g,
+    "",
+  );
+  return `url("${url}")`;
 }
