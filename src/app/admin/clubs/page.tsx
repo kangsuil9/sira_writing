@@ -19,7 +19,7 @@ export default async function AdminClubsPage() {
 
   return (
     <main>
-      <header className="shell header"><Link className="brand" href="/">시라</Link><Link href="/">홈으로</Link></header>
+      <header className="shell header"><Link className="brand" href="/">시라</Link><div className="header-actions"><Link href="/admin/home">홈 화면 관리</Link><Link href="/">홈으로</Link></div></header>
       <section className="shell admin-head"><span className="eyebrow">ADMIN</span><h1>클럽 관리</h1><p>기간을 정해 모두에게 열리는 글쓰기 클럽을 개설하고 회원 제안을 검토합니다.</p></section>
       <section className="shell admin-grid single"><ClubForm /></section>
 

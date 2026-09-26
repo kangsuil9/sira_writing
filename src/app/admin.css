@@ -33,3 +33,6 @@
 .proposal-review-form button { padding: 9px 14px; border: 0; background: var(--ink); color: #fff; cursor: pointer; }
 .proposal-review-form .reject-action { background: #eeeae3; color: #8b3b31; }
 .proposal-review-form span { margin-left: 8px; }
+.admin-home-grid { padding-bottom: 110px; }
+.home-content-form { border-radius: 16px; }
+.home-content-preview { display: block; width: 100%; aspect-ratio: 2 / 1; margin: 12px 0 22px; border-radius: 12px; object-fit: cover; }

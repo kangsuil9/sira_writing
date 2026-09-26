@@ -5,6 +5,12 @@ import { createClient, getCurrentUser } from "@/lib/supabase/server";
 
 export type AdminActionState = { error?: string; success?: string };
 
+export type HomeContentInput = {
+  heroTitle: string;
+  heroDescription: string;
+  heroImageUrl: string;
+};
+
 async function requireAdmin() {
   const supabase = await createClient();
   const user = await getCurrentUser(supabase);
@@ -108,4 +114,36 @@ function revalidateClubPaths(clubId: string) {
   revalidatePath("/");
   revalidatePath("/admin/clubs");
   revalidatePath(`/clubs/${clubId}`);
+}
+
+export async function updateHomeContent(
+  input: HomeContentInput,
+): Promise<AdminActionState> {
+  const auth = await requireAdmin();
+  if ("error" in auth) return { error: auth.error };
+
+  const heroTitle = input.heroTitle.trim();
+  const heroDescription = input.heroDescription.trim();
+  const heroImageUrl = input.heroImageUrl.trim();
+  if (heroTitle.length < 1 || heroTitle.length > 120) {
+    return { error: "큰 문구는 1~120자로 입력해 주세요." };
+  }
+  if (heroDescription.length < 1 || heroDescription.length > 300) {
+    return { error: "작은 문구는 1~300자로 입력해 주세요." };
+  }
+  if (!heroImageUrl) return { error: "대표 사진을 등록해 주세요." };
+
+  const { error } = await auth.supabase.from("home_content").upsert({
+    id: 1,
+    hero_title: heroTitle,
+    hero_description: heroDescription,
+    hero_image_url: heroImageUrl,
+    updated_by: auth.user.id,
+    updated_at: new Date().toISOString(),
+  });
+  if (error) return { error: "홈 화면 설정을 저장하지 못했어요." };
+
+  revalidatePath("/");
+  revalidatePath("/admin/home");
+  return { success: "홈 화면에 반영했어요." };
 }

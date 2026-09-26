@@ -8,7 +8,12 @@ export default async function HomePage() {
   const user = await getCurrentUser(supabase);
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: clubs }, { data: latestPosts }] =
+  const [
+    { data: profile },
+    { data: clubs },
+    { data: latestPosts },
+    { data: homeContent },
+  ] =
     await Promise.all([
       supabase
         .from("profiles")
@@ -29,6 +34,11 @@ export default async function HomePage() {
         )
         .order("published_at", { ascending: false })
         .limit(1),
+      supabase
+        .from("home_content")
+        .select("hero_title,hero_description,hero_image_url")
+        .eq("id", 1)
+        .maybeSingle(),
     ]);
 
   if (!profile?.onboarding_completed) redirect("/onboarding");
@@ -49,6 +59,13 @@ export default async function HomePage() {
       (club.ends_at && new Date(club.ends_at) < now),
   );
   const latestPost = latestPosts?.[0];
+  const heroTitle =
+    homeContent?.hero_title ?? "누구나 읽는다.\n하지만 아무나 안쓴다.";
+  const heroDescription =
+    homeContent?.hero_description ??
+    "내 속에 나를 꺼내 나를 완성해보세요. 나다움과 나만의 특별함을 보여주세요.";
+  const heroImageUrl =
+    homeContent?.hero_image_url ?? "/images/home-writing-hero-v1.png";
 
   return (
     <main className="home-page">
@@ -66,20 +83,16 @@ export default async function HomePage() {
 
       <section className="shell home-visual-hero">
         <div className="home-hero-copy">
-          <h1>
-            누구나 읽는다.
-            <br />
-            하지만 아무나 안쓴다.
-          </h1>
-          <p>
-            내 속에 나를 꺼내 나를 완성해보세요. 나다움과 나만의
-            특별함을 보여주세요.
-          </p>
+          <h1>{heroTitle}</h1>
+          <p>{heroDescription}</p>
         </div>
         <div
           className="home-hero-visual"
           role="img"
           aria-label="햇빛이 드는 창가 책상에서 글을 쓰는 사람의 뒷모습"
+          style={{
+            backgroundImage: `url("${heroImageUrl.replace(/["\\\n\r]/g, "")}")`,
+          }}
         />
       </section>
 
