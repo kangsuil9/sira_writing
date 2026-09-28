@@ -52,9 +52,9 @@ export function ClubEditForm({ club, locked }: { club: EditableClub; locked: boo
   );
 }
 
-export function ClubStatusForm({ clubId, status, locked }: { clubId: string; status: string; locked: boolean }) {
+export function ClubStatusForm({ clubId, status, ended }: { clubId: string; status: string; ended: boolean }) {
   const [state, action, pending] = useActionState(updateClubStatus, initialState);
-  return <form className="status-form" action={action}><input type="hidden" name="clubId" value={clubId} /><select name="status" defaultValue={status} disabled={locked}><option value="DRAFT">초안</option><option value="ACTIVE">공개</option><option value="COMPLETED">종료</option></select><button disabled={pending || locked}>{locked ? "변경 불가" : pending ? "변경 중…" : "변경"}</button><Feedback state={state} /></form>;
+  return <form className="status-form" action={action}><input type="hidden" name="clubId" value={clubId} /><select name="status" defaultValue={status}><option value="DRAFT" disabled={ended}>초안</option><option value="ACTIVE" disabled={ended}>공개</option><option value="COMPLETED">종료</option><option value="HIDDEN">비공개</option></select><button disabled={pending}>{pending ? "변경 중…" : "변경"}</button><Feedback state={state} /></form>;
 }
 
 export function ProposalReviewForm({ clubId }: { clubId: string }) {

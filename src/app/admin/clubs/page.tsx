@@ -48,14 +48,15 @@ export default async function AdminClubsPage() {
           <div className="club-cards">
             {managedClubs.map((club) => {
               const ended = club.status === "COMPLETED" || new Date(club.ends_at) < new Date();
-              const label = ended ? "종료" : club.status === "ACTIVE" ? "공개" : club.status === "NOT_SELECTED" ? "미승인" : "초안";
+              const label = club.status === "HIDDEN" ? "비공개" : ended ? "종료" : club.status === "ACTIVE" ? "공개" : club.status === "NOT_SELECTED" ? "미승인" : "초안";
+              const selectedStatus = club.status === "HIDDEN" ? "HIDDEN" : ended ? "COMPLETED" : club.status;
               return (
                 <article className="club-card" key={club.id}>
                   <div><span>{club.category} · {club.origin_type === "PROPOSAL" ? "회원 제안" : "관리자 개설"}</span><span className={!ended && club.status === "ACTIVE" ? "status active" : "status"}>{label}</span></div>
                   <h3>{club.topic_sentence}</h3><p>{club.description}</p>
                   <p className="admin-period">{formatDate(club.starts_at)} – {formatDate(club.ends_at)}</p>
                   {club.status !== "NOT_SELECTED" && <ClubEditForm club={club} locked={ended} />}
-                  {club.status !== "NOT_SELECTED" && <ClubStatusForm clubId={club.id} status={ended ? "COMPLETED" : club.status} locked={ended} />}
+                  {club.status !== "NOT_SELECTED" && <ClubStatusForm clubId={club.id} status={selectedStatus} ended={ended} />}
                 </article>
               );
             })}

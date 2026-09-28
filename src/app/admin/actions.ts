@@ -73,13 +73,23 @@ export async function updateClubStatus(_: AdminActionState, formData: FormData):
   if ("error" in auth) return { error: auth.error };
   const clubId = String(formData.get("clubId") ?? "");
   const status = String(formData.get("status") ?? "");
-  if (!["DRAFT", "ACTIVE", "COMPLETED"].includes(status)) return { error: "변경할 상태를 확인해 주세요." };
+  if (!["DRAFT", "ACTIVE", "COMPLETED", "HIDDEN"].includes(status)) return { error: "변경할 상태를 확인해 주세요." };
 
   const { data: club } = await auth.supabase.from("clubs").select("status,ends_at").eq("id", clubId).single();
   if (!club) return { error: "클럽을 찾지 못했어요." };
-  if (club.status === "COMPLETED" || new Date(club.ends_at) < new Date()) return { error: "종료된 클럽은 변경할 수 없어요." };
+  const ended = club.status === "COMPLETED" || new Date(club.ends_at) < new Date();
+  if (ended && !["COMPLETED", "HIDDEN"].includes(status)) {
+    return { error: "종료된 클럽은 종료 또는 비공개 상태로만 변경할 수 있어요." };
+  }
 
-  const { error } = await auth.supabase.from("clubs").update({ status, updated_at: new Date().toISOString() }).eq("id", clubId);
+  const { error } = await auth.supabase
+    .from("clubs")
+    .update({
+      status,
+      read_scope: status === "HIDDEN" ? "CLOSED" : "AUTHENTICATED",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", clubId);
   if (error) return { error: "클럽 상태를 변경하지 못했어요." };
   revalidateClubPaths(clubId);
   return { success: "상태를 변경했어요." };

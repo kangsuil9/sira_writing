@@ -15,7 +15,7 @@ export default async function ProposalsPage() {
     .eq("proposed_by", user.id)
     .order("created_at", { ascending: false });
   const pending = (proposals ?? []).filter((proposal) => proposal.status === "DRAFT");
-  const selected = (proposals ?? []).filter((proposal) => ["ACTIVE", "COMPLETED"].includes(proposal.status));
+  const selected = (proposals ?? []).filter((proposal) => ["ACTIVE", "COMPLETED", "HIDDEN"].includes(proposal.status));
   const notSelected = (proposals ?? []).filter((proposal) => proposal.status === "NOT_SELECTED");
 
   return (
@@ -57,7 +57,7 @@ function ProposalGroup({ label, title, proposals, empty }: { label: string; titl
         <div className="my-proposal-list">
           {proposals.map((proposal) => (
             <div className="my-proposal" key={proposal.id}>
-              <div><b>{proposal.topic_sentence}</b><span>{proposal.status === "COMPLETED" ? "종료" : title}</span></div>
+              <div><b>{proposal.topic_sentence}</b><span>{proposal.status === "COMPLETED" ? "종료" : proposal.status === "HIDDEN" ? "비공개" : title}</span></div>
               <p>{proposal.description}</p>
               <small>{formatDate(proposal.starts_at)} – {formatDate(proposal.ends_at)}</small>
             </div>

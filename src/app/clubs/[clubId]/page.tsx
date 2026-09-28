@@ -32,7 +32,7 @@ export default async function ClubPage({
 
   if (!club) notFound();
 
-  if (club.status === "DRAFT") {
+  if (["DRAFT", "HIDDEN"].includes(club.status)) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
