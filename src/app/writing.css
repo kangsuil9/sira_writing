@@ -264,6 +264,15 @@
 .proposal-form textarea { line-height: 1.7; resize: vertical; }
 .proposal-form button { justify-self: start; padding: 13px 19px; border: 0; border-radius: 9px; background: var(--ink); color: #fff; font-weight: 700; cursor: pointer; }
 .proposal-form button:disabled { opacity: .5; }
+.proposal-image-field { display: grid; gap: 10px; }
+.proposal-image-field > strong { font-size: 14px; }
+.proposal-image-field > strong em { margin-left: 5px; color: #a64b3c; font-size: 12px; font-style: normal; }
+.proposal-image-picker { display: flex !important; min-height: 142px; align-items: center; justify-content: center; gap: 6px !important; padding: 20px !important; border: 1px dashed #b9b8af; border-radius: 12px; background: #fff; text-align: center; cursor: pointer; }
+.proposal-image-picker span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--green); color: #fff; font-size: 24px; font-weight: 400; line-height: 1; }
+.proposal-image-picker small { color: #77796f; font-size: 12px; font-weight: 400; }
+.proposal-image-input { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+.proposal-image-field img { display: block; width: 100%; aspect-ratio: 2 / 1; border-radius: 12px; object-fit: cover; }
+.proposal-image-field .error { min-height: 0; margin: 0; }
 .my-proposal-list { display: grid; gap: 10px; margin-top: 22px; }
 .my-proposal { padding: 20px; border-radius: 11px; background: #fff; }
 .my-proposal > div { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }

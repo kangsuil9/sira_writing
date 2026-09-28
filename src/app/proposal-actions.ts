@@ -21,12 +21,17 @@ export async function createClubProposal(
   const description = String(formData.get("description") ?? "").trim();
   const startsAt = String(formData.get("startsAt") ?? "");
   const endsAt = String(formData.get("endsAt") ?? "");
+  const coverImageUrl = String(formData.get("coverImageUrl") ?? "").trim();
 
   if (title.length < 5 || title.length > 200) {
     return { error: "주제는 5~200자로 입력해 주세요." };
   }
   if (description.length < 20 || description.length > 1000) {
     return { error: "설명은 20~1,000자로 입력해 주세요." };
+  }
+  const allowedImagePrefix = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/site-assets/`;
+  if (!coverImageUrl || !coverImageUrl.startsWith(allowedImagePrefix)) {
+    return { error: "대표 사진을 첨부해 주세요." };
   }
   if (!startsAt || !endsAt || new Date(endsAt) <= new Date(startsAt)) {
     return { error: "시작일과 종료일을 확인해 주세요." };
@@ -41,6 +46,7 @@ export async function createClubProposal(
       category: "회원 제안",
       topic_sentence: title,
       description,
+      cover_image_url: coverImageUrl,
       starts_at: start,
       ends_at: end,
       origin_type: "PROPOSAL",
@@ -70,6 +76,7 @@ export async function createClubProposal(
     description,
     startsAt,
     endsAt,
+    coverImageUrl,
   });
 
   revalidatePath("/proposals");
@@ -86,6 +93,7 @@ async function sendProposalNotification(proposal: {
   description: string;
   startsAt: string;
   endsAt: string;
+  coverImageUrl: string;
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.PROPOSAL_EMAIL_FROM;
@@ -114,6 +122,7 @@ async function sendProposalNotification(proposal: {
           <p><strong>주제</strong>: ${escapeHtml(proposal.title)}</p>
           <p><strong>설명</strong><br>${escapeHtml(proposal.description).replace(/\n/g, "<br>")}</p>
           <p><strong>활동 기간</strong>: ${escapeHtml(proposal.startsAt)} – ${escapeHtml(proposal.endsAt)}</p>
+          <p><img src="${escapeHtml(proposal.coverImageUrl)}" alt="제안된 클럽 대표 사진" style="width:100%;max-width:560px;border-radius:12px" /></p>
           <p><a href="${adminUrl}">선정 대기 글쓰기 클럽 확인하기</a></p>
           <small>제안 ID: ${escapeHtml(proposal.proposalId)}</small>
         `,
