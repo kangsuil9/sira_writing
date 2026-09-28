@@ -138,7 +138,7 @@ export async function reviewClubProposal(_: AdminActionState, formData: FormData
   if ("error" in auth) return { error: auth.error };
   const clubId = String(formData.get("clubId") ?? "");
   const decision = String(formData.get("decision") ?? "");
-  if (!["approve", "reject"].includes(decision)) return { error: "처리할 결과를 확인해 주세요." };
+  if (decision !== "select") return { error: "처리할 결과를 확인해 주세요." };
 
   const { data: proposal } = await auth.supabase
     .from("clubs")
@@ -148,16 +148,15 @@ export async function reviewClubProposal(_: AdminActionState, formData: FormData
   if (!proposal || proposal.origin_type !== "PROPOSAL" || proposal.status !== "DRAFT") {
     return { error: "이미 처리됐거나 찾을 수 없는 제안이에요." };
   }
-  if (decision === "approve" && new Date(proposal.ends_at) < new Date()) return { error: "종료일이 지난 제안은 승인할 수 없어요." };
+  if (new Date(proposal.ends_at) < new Date()) return { error: "종료일이 지난 제안은 선정할 수 없어요." };
 
-  const changes = decision === "approve"
-    ? { status: "ACTIVE", read_scope: "AUTHENTICATED", updated_at: new Date().toISOString() }
-    : { status: "NOT_SELECTED", updated_at: new Date().toISOString() };
+  const changes = { status: "ACTIVE", read_scope: "AUTHENTICATED", updated_at: new Date().toISOString() };
   const { error } = await auth.supabase.from("clubs").update(changes).eq("id", clubId);
   if (error) return { error: "제안 결과를 저장하지 못했어요." };
   revalidateClubPaths(clubId);
   revalidatePath("/proposals");
-  return { success: decision === "approve" ? "제안을 승인했어요." : "제안을 미승인 처리했어요." };
+  revalidatePath("/admin/clubs/proposals");
+  return { success: "글쓰기 클럽으로 선정했어요." };
 }
 
 function revalidateClubPaths(clubId: string) {

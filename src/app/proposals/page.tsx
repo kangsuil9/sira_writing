@@ -14,6 +14,9 @@ export default async function ProposalsPage() {
     .eq("origin_type", "PROPOSAL")
     .eq("proposed_by", user.id)
     .order("created_at", { ascending: false });
+  const pending = (proposals ?? []).filter((proposal) => proposal.status === "DRAFT");
+  const selected = (proposals ?? []).filter((proposal) => ["ACTIVE", "COMPLETED"].includes(proposal.status));
+  const notSelected = (proposals ?? []).filter((proposal) => proposal.status === "NOT_SELECTED");
 
   return (
     <main>
@@ -28,42 +31,41 @@ export default async function ProposalsPage() {
       </section>
 
       <section className="shell proposal-sections">
-        <article>
-          <span>운영 방식</span>
-          <h2>승인되면 모두에게 열리는 글쓰기 클럽</h2>
-          <p>관리자가 제안을 확인하고 승인하면 정해진 기간 동안 모든 회원이 자유롭게 글을 쓸 수 있어요.</p>
-          <strong>참여 인원과 관계없이 클럽은 시작돼요.</strong>
-        </article>
-        <article>
-          <span>내 제안</span>
-          <h2>내가 제안한 글쓰기 주제</h2>
-          {(proposals ?? []).length === 0 ? (
-            <strong>아직 제안한 주제가 없어요.</strong>
-          ) : (
-            <div className="my-proposal-list">
-              {(proposals ?? []).map((proposal) => (
-                <div className="my-proposal" key={proposal.id}>
-                  <div>
-                    <b>{proposal.topic_sentence}</b>
-                    <span>{proposalStatus(proposal.status)}</span>
-                  </div>
-                  <p>{proposal.description}</p>
-                  <small>{formatDate(proposal.starts_at)} – {formatDate(proposal.ends_at)}</small>
-                </div>
-              ))}
-            </div>
-          )}
-        </article>
+        <ProposalGroup label="내 제안" title="선정 대기 중" proposals={pending} empty="선정 대기 중인 제안이 없어요." />
+        <ProposalGroup label="내 제안" title="선정됨" proposals={selected} empty="아직 선정된 제안이 없어요." />
+        {notSelected.length > 0 && <ProposalGroup label="지난 결과" title="선정되지 않음" proposals={notSelected} empty="" />}
       </section>
     </main>
   );
 }
 
-function proposalStatus(status: string) {
-  if (status === "ACTIVE") return "승인";
-  if (status === "NOT_SELECTED") return "미승인";
-  if (status === "COMPLETED") return "종료";
-  return "검토 중";
+type Proposal = {
+  id: string;
+  topic_sentence: string;
+  description: string;
+  status: string;
+  starts_at: string;
+  ends_at: string;
+};
+
+function ProposalGroup({ label, title, proposals, empty }: { label: string; title: string; proposals: Proposal[]; empty: string }) {
+  return (
+    <article>
+      <span>{label}</span>
+      <h2>{title}</h2>
+      {proposals.length === 0 ? <strong>{empty}</strong> : (
+        <div className="my-proposal-list">
+          {proposals.map((proposal) => (
+            <div className="my-proposal" key={proposal.id}>
+              <div><b>{proposal.topic_sentence}</b><span>{proposal.status === "COMPLETED" ? "종료" : title}</span></div>
+              <p>{proposal.description}</p>
+              <small>{formatDate(proposal.starts_at)} – {formatDate(proposal.ends_at)}</small>
+            </div>
+          ))}
+        </div>
+      )}
+    </article>
+  );
 }
 
 function formatDate(value: string) {

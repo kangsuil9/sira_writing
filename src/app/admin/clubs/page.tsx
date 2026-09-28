@@ -24,14 +24,14 @@ export default async function AdminClubsPage() {
       <section className="shell admin-grid single"><ClubForm /></section>
 
       <section className="shell club-admin-list">
-        <h2>검토할 주제 제안</h2>
-        {proposals.length === 0 ? <p className="empty">검토할 제안이 없어요.</p> : (
+        <div className="admin-section-heading"><h2>선정 대기 글쓰기 클럽</h2><Link href="/admin/clubs/proposals">전체보기</Link></div>
+        {proposals.length === 0 ? <p className="empty">선정 대기 중인 클럽이 없어요.</p> : (
           <div className="club-cards">
-            {proposals.map((proposal) => {
+            {proposals.slice(0, 5).map((proposal) => {
               const proposer = Array.isArray(proposal.profiles) ? proposal.profiles[0] : proposal.profiles;
               return (
                 <article className="club-card proposal-card" key={proposal.id}>
-                  <div><span>{proposer?.nickname ?? "회원"}님의 제안</span><span className="status">검토 중</span></div>
+                  <div><span>{proposer?.nickname ?? "회원"}님의 제안</span><span className="status">선정 대기 중</span></div>
                   <h3>{proposal.topic_sentence}</h3><p>{proposal.description}</p>
                   <p className="admin-period">{formatDate(proposal.starts_at)} – {formatDate(proposal.ends_at)}</p>
                   <ProposalReviewForm clubId={proposal.id} />

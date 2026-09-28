@@ -59,7 +59,7 @@ export function ClubStatusForm({ clubId, status, locked }: { clubId: string; sta
 
 export function ProposalReviewForm({ clubId }: { clubId: string }) {
   const [state, action, pending] = useActionState(reviewClubProposal, initialState);
-  return <form className="proposal-review-form" action={action}><input type="hidden" name="clubId" value={clubId} /><button name="decision" value="reject" className="reject-action" disabled={pending}>미승인</button><button name="decision" value="approve" disabled={pending}>{pending ? "처리 중…" : "승인"}</button><Feedback state={state} /></form>;
+  return <form className="proposal-review-form" action={action}><input type="hidden" name="clubId" value={clubId} /><button name="decision" value="select" disabled={pending}>{pending ? "선정 중…" : "선정하기"}</button><Feedback state={state} /></form>;
 }
 
 function Feedback({ state }: { state: AdminActionState }) {
