@@ -32,14 +32,16 @@ export async function createPost(_: WritingState, formData: FormData): Promise<W
   const { data, error } = await supabase.from("posts").insert({ club_id: clubId, author_id: user.id, title, body, body_html: bodyHtml || null, discussion_question: discussionQuestion || null }).select("id").single();
   if (error || !data) return { error: "글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
   if (draftId) {
-    await supabase
+    const { error: draftDeleteError } = await supabase
       .from("post_drafts")
       .delete()
       .eq("id", draftId)
       .eq("author_id", user.id);
+    if (draftDeleteError) console.error("Published draft cleanup failed:", draftDeleteError);
   }
   revalidatePath(`/clubs/${clubId}`);
   revalidatePath("/my/drafts");
+  revalidatePath("/my");
   redirect(`/posts/${data.id}`);
 }
 export async function updatePost(_: WritingState, formData: FormData): Promise<WritingState> {

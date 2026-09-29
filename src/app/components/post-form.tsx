@@ -2,6 +2,7 @@
 
 import {
   ChangeEvent,
+  FormEvent,
   MouseEvent,
   useActionState,
   useEffect,
@@ -61,6 +62,9 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
     question,
   });
   const dirtyRef = useRef(false);
+  const publishingRef = useRef(false);
+  const submissionReadyRef = useRef(false);
+  const draftSavePromiseRef = useRef<Promise<void> | null>(null);
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
@@ -79,34 +83,45 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
     if (post) return;
 
     const saveDraft = async () => {
-      if (!dirtyRef.current) return;
+      if (publishingRef.current || !dirtyRef.current) return;
       const current = latestRef.current;
       if (!current.title.trim() && !current.body.trim()) return;
 
-      setSaveStatus("saving");
-      const { error } = await supabase.from("post_drafts").upsert({
-        id: draftId,
-        club_id: clubId,
-        author_id: userId,
-        title: current.title.slice(0, 200),
-        body: current.body.slice(0, 50000),
-        body_html: current.bodyHtml.slice(0, 200000),
-        discussion_question: current.question.trim().slice(0, 300) || null,
-        updated_at: new Date().toISOString(),
-      });
+      const operation = (async () => {
+        setSaveStatus("saving");
+        const { error } = await supabase.from("post_drafts").upsert({
+          id: draftId,
+          club_id: clubId,
+          author_id: userId,
+          title: current.title.slice(0, 200),
+          body: current.body.slice(0, 50000),
+          body_html: current.bodyHtml.slice(0, 200000),
+          discussion_question: current.question.trim().slice(0, 300) || null,
+          updated_at: new Date().toISOString(),
+        });
 
-      if (error) {
-        setSaveStatus("error");
-        return;
-      }
+        if (error) {
+          setSaveStatus("error");
+          return;
+        }
 
-      dirtyRef.current = false;
-      setSaveStatus("saved");
+        dirtyRef.current = false;
+        setSaveStatus("saved");
+      })();
+      draftSavePromiseRef.current = operation;
+      await operation;
+      if (draftSavePromiseRef.current === operation) draftSavePromiseRef.current = null;
     };
 
     const timer = window.setInterval(saveDraft, 10_000);
     return () => window.clearInterval(timer);
   }, [clubId, draftId, post, supabase, userId]);
+
+  useEffect(() => {
+    if (!state.error) return;
+    publishingRef.current = false;
+    submissionReadyRef.current = false;
+  }, [state]);
 
   function markChanged() {
     dirtyRef.current = true;
@@ -195,11 +210,28 @@ export function PostForm({ clubId, userId, draftId, post, draft }: Props) {
     event.target.value = "";
   }
 
+  async function prepareSubmission(event: FormEvent<HTMLFormElement>) {
+    syncEditorFields();
+    if (post || submissionReadyRef.current) return;
+    if (publishingRef.current) {
+      event.preventDefault();
+      return;
+    }
+
+    event.preventDefault();
+    const form = event.currentTarget;
+    publishingRef.current = true;
+    dirtyRef.current = false;
+    await draftSavePromiseRef.current;
+    submissionReadyRef.current = true;
+    form.requestSubmit();
+  }
+
   return (
     <form
       action={action}
       className="post-form rich-post-form"
-      onSubmit={syncEditorFields}
+      onSubmit={prepareSubmission}
     >
       <input type="hidden" name="clubId" value={clubId} />
       <input ref={bodyInputRef} type="hidden" name="body" defaultValue={initialBody} />
