@@ -52,7 +52,8 @@
 .collection-header h1 { margin: 24px 0 10px; font-size: clamp(34px, 5vw, 52px); letter-spacing: -.05em; }
 .collection-header p { margin: 0; color: #74766e; line-height: 1.7; }
 .collection-club-list, .collection-post-list { display: grid; gap: 16px; }
-.collection-post-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.collection-post-list { grid-template-columns: minmax(0, 1fr); }
+.collection-post-list .post-card { border: 1px solid #ebe9e1; border-radius: 18px; box-shadow: 0 7px 22px rgba(34,36,30,.045); }
 .collection-post-list .home-panel-empty { grid-column: 1 / -1; }
 .club-meta, .article-topic { color: var(--green); font-size: 14px; font-weight: 700; }
 @media (max-width: 720px) {
@@ -125,6 +126,13 @@
 .article { max-width: 760px; padding: 68px 0 110px; }
 .article h1 { margin: 18px 0 12px; font-size: clamp(34px, 6vw, 52px); line-height: 1.25; letter-spacing: -.04em; }
 .article-byline { color: #77796f; }
+.author-post-link { display: inline-flex; margin-top: 16px; padding: 9px 13px; border-radius: 999px; background: var(--soft); color: var(--green); font-size: 14px; font-weight: 750; }
+.author-post-link:hover { background: #eceee7; }
+.writer-header { padding-bottom: 34px; }
+.writer-profile { display: flex; align-items: center; gap: 16px; margin-top: 30px; }
+.writer-profile .profile-image { width: 58px; height: 58px; }
+.writer-profile h1 { margin: 0 0 6px; }
+.writer-profile p { margin: 0; }
 .article-actions { display: flex; gap: 14px; justify-content: flex-end; margin: 25px 0; }
 .article-actions form { margin: 0; }
 .article-actions button { padding: 0; border: 0; background: none; color: #a1392c; cursor: pointer; }

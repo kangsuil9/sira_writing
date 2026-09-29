@@ -73,6 +73,9 @@ export default async function PostPage({
           {author?.nickname ?? "알 수 없는 회원"} ·{" "}
           {formatDate(post.published_at)}
         </div>
+        <Link className="author-post-link" href={`/writers/${post.author_id}`}>
+          이 사람의 글 모두보기
+        </Link>
 
         {editable && (
           <div className="article-actions">
